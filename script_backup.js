@@ -1,6 +1,5 @@
 const lidarr = "http://127.0.0.1:8686/api/v1/";
-// var suffix = "/api/v1/artist/lookup?term=elvis&apikey=bd0bdb44e461412291ee23a026d71744"
-var apikey = "bd0bdb44e461412291ee23a026d71744";
+var apikey = "";
 var auth = "?apikey=" + apikey;
 
 // Basic DOM elements
