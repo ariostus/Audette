@@ -191,8 +191,7 @@ async function artistLookupParser(json){
 }
 
 
-
-// retrieve accessible image url to display artists and albums covers
+// retrieve image url to display artists and albums covers
 async function getMediaCover(json){
     let images = json[0]["images"];
     if(images.length == 0){
@@ -200,10 +199,16 @@ async function getMediaCover(json){
     }
 
     else{
-        let path = json[0]["images"][0]["url"].substring(1).replace('MediaCover', 'mediacover/artist').split('?')[0]
+        // let path = json[0]["images"][0]["url"].substring(1).replace('MediaCover', 'mediacover/artist').split('?')[0]
         
-        let url = lidarr + path + auth
-        return url}
+        // let url = lidarr + path + auth
+        // return url}
+        let i = 0;
+        while(json[0]["images"][i]["coverType"] != "poster"){
+            i++;
+        }
+        return json[0]["images"][i]["remoteUrl"];
+    }
 }
 
 
