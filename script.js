@@ -3,6 +3,8 @@ const host = "http://127.0.0.1:8686";
 var apikey = "";
 var auth = "?apikey=" + apikey;
 
+import {ArtistLookup} from "./classes.js"
+
 // Basic DOM elements
 const output = document.getElementById("output");
 const logs = document.getElementById("logs");
@@ -19,7 +21,6 @@ const artistPoster = document.querySelector("#artistPoster");
 
 const basicHeaders = {"accept": "application/json"};
 const postHeaders = {"accept": "application/json", "Content-Type": "application/json"}
-
 
 
 // Performs first HEALTH CHECKS and sets Root path
@@ -368,6 +369,4 @@ async function requestAlbumCallback(response){
         albumRequested.innerHTML = "An error occured. Please try again."
     }
 }
-
-
 
