@@ -1,52 +1,63 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <title>Hello World</title>
-    </head>
+<head>
+  <title>Hello World</title>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+</head>
 
-    <body>
-        <div>
-            <h3>Startup</h3>
-            <p id="output">Odette</p>
-            <p id="logs"></p>
-            <button onclick="healthCheck()">Start</button>
-        </div>
-        <hr>
-        <div>
-            <h3>Artist search</h3>
-            <input type="text" id="artistSearchBar">
-            <button onclick="artistLookup()">Go</button>
-            <p id="showResults">Search results are displayed here</p>
-            <img id="artistPoster" width="200">
-        </div>
-        <hr>
-        <div>
-            <h3>Add artist</h3>
-            <input type="text" id="artistId">
-            <button onclick = "addArtist(getArtistInfo())">Add</button>
-            <p id="addedArtist"></p>
-        </div>
-        <hr>
-        <div>
-            <h3>View albums and releases</h3>
-            <input type="text" id="artistIdAlbums">
-            <button onclick = "showAlbums()">View</button>
-            <p id="albums"></p>
-        </div>
-        <hr>
-        <div>
-            <h3>Request Album</h3>
-            <input type="text" id="albumId">
-            <button onclick = "requestAlbum()">Go</button>
-            <p id="albumRequested"></p>
-        </div>
-        
+<body onload="healthCheck()">
+  <div>
+    <h3>Startup</h3>
+    <p id="output">Odette</p>
+    <p id="logs"></p>
+    <button onclick="healthCheck()">Start</button>
+  </div>
+  <hr>
+  <div id="library">
+    <h3>Library</h3>
+    <button onclick="loadLibrary()">Load</button>
+  </div>
+  <div id="results">
+    <h3>Artist search</h3>
+    <input type="text" id="artistSearchBar">
+    <button onclick="artistLookup()">Go</button>
+    <p id="showResults">Search results are displayed here</p>
+    <img id="artistPoster" width="200">
+  </div>
+  <hr>
+  <div>
+    <h3>Add artist</h3>
+    <!-- <input type="text" id="artistId"> -->
+    <!-- <button onclick="addArtist(getArtistInfo())">Add</button> -->
+    <p id="addedArtist"></p>
+  </div>
+  <hr>
+  <div id="albums">
+    <h3>View albums and releases</h3>
+    <!-- <input type="text" id="artistIdAlbums"> -->
+    <!-- <button onclick="showAlbums()">View</button> -->
+    <p id="showalbums"></p>
+  </div>
+  <hr>
+  <div>
+    <h3>Request Album</h3>
+    <!-- <button onclick="requestAlbum()">Go</button> -->
+    <p id="albumRequested"></p>
+  </div>
+  <hr>
+  <div id="tracks">
+    <h3>Songs</h3>
+    <p id="tracksOutput"></p>
+  </div>
 
-    <script src="script.js"></script>    
-    </body>
 
-    
+
+
+</body>
+
+<script src="classes.js"></script>
+<script src="script.js"></script>
 
 
 
