@@ -51,3 +51,12 @@
   border: 1px solid black;
   margin: 2em;
 }
+
+/********************************* new gen ***********************************/
+#container {
+  background-color: red;
+  margin: 2%;
+  width: 92%;
+  height: 92%;
+  padding: 2%;
+}

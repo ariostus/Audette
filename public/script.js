@@ -1,30 +1,23 @@
-// require('dotenv').config();
-// console.log(process.env);
-
-// const apikey = process.env.API_KEY;
-
-// var auth = "?apikey=" + apikey; 
-
-// import {ArtistLookup} from "./classes";
+// MAIN LOGIC
 
 // Basic DOM elements
-const output = document.getElementById("output");
-const logs = document.getElementById("logs");
-const artistSearchBar = document.getElementById("artistSearchBar");
-const showResults = document.getElementById("showResults");
-// const artistId = document.getElementById("artistId");
-const albums = document.getElementById("albums");
-const addedArtist = document.getElementById("addedArtist");
-// const artistIdAlbums = document.getElementById("artistIdAlbums");
-// const albumId = document.querySelector("#albumId");
-const albumRequested = document.querySelector("#albumRequested");
-const artistPoster = document.querySelector("#artistPoster");
-const results = document.querySelector("#results"); // div containing search bar and search results
-const showalbums = document.querySelector("#showalbums");
-const libraryDiv = document.querySelector("#library");
-const tracks = document.querySelector("#tracks");
-const tracksOutput = document.querySelector("#tracksOutput");
-const queueDiv = document.querySelector("#queue");
+// const output = document.getElementById("output");
+// const logs = document.getElementById("logs");
+// const artistSearchBar = document.getElementById("artistSearchBar");
+// const showResults = document.getElementById("showResults");
+// // const artistId = document.getElementById("artistId");
+// const albums = document.getElementById("albums");
+// const addedArtist = document.getElementById("addedArtist");
+// // const artistIdAlbums = document.getElementById("artistIdAlbums");
+// // const albumId = document.querySelector("#albumId");
+// const albumRequested = document.querySelector("#albumRequested");
+// const artistPoster = document.querySelector("#artistPoster");
+// const results = document.querySelector("#results"); // div containing search bar and search results
+// const showalbums = document.querySelector("#showalbums");
+// const libraryDiv = document.querySelector("#library");
+// const tracks = document.querySelector("#tracks");
+// const tracksOutput = document.querySelector("#tracksOutput");
+// const queueDiv = document.querySelector("#queue");
 
 
 const basicHeaders = {"accept": "application/json"};
@@ -119,6 +112,7 @@ async function healthCallback(response){
         }
     else {
         output.innerHTML = "Service temporarily unavailable. Please try again in a few minutes or contact support."
+        completeFailure();
     } // this means request completely failed, so api is down
 }
 
