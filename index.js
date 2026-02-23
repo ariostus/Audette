@@ -3,7 +3,6 @@ const express = require('express');
 const passport = require("passport-oauth2");
 
 
-
 const apikey = process.env.API_KEY;
 const auth =  "?apikey=" + apikey;
 const lidarr = "http://127.0.0.1:8686/api/v1/";
