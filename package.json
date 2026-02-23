@@ -1,0 +1,13 @@
+{
+  "name": "audette",
+  "version": "0.1.1",
+  "description": "Client for Lidarr",
+  "license": "GPL-3.0-or-later",
+  "author": "LudoSir",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "passport-oauth2": "^1.8.0"
+  }
+}
