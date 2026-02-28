@@ -61,24 +61,24 @@ function clearTracks(){
 function clearResults(){
     let oldSearchResults = document.querySelectorAll(".artistPreview");
     for(let i=0; i<oldSearchResults.length; i++){
-        results.removeChild(oldSearchResults[i])
+        main.removeChild(oldSearchResults[i])
     }
     let oldSearchResultsLib = document.querySelectorAll(".artistPreviewFromLibrary");
     for(let i=0; i<oldSearchResultsLib.length; i++){
-        results.removeChild(oldSearchResultsLib[i])
+        main.removeChild(oldSearchResultsLib[i])
     }
 }
 
 
 // clear albums and info shown from previous search
 function clearAlbums(){
-    let oldAlbums = albums.querySelectorAll(".albumPreview") 
+    let oldAlbums = main.querySelectorAll(".albumPreview") 
     for(let a=0; a<oldAlbums.length; a++){
-        albums.removeChild(oldAlbums[a]);
+        main.removeChild(oldAlbums[a]);
     }
-    let oldVersions = albums.querySelectorAll(".versionInfo");
+    let oldVersions = main.querySelectorAll(".versionInfo");
     for(let v=0; v<oldVersions.length; v++){
-        albums.removeChild(oldVersions[v]);
+        main.removeChild(oldVersions[v]);
     }
 }
 

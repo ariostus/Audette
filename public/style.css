@@ -4,11 +4,6 @@
   border-radius: 50%;
 }
 
-.artistPreview {
-  border: 3px solid black;
-  height: 300px;
-  overflow-y: scroll;
-}
 
 .artistPreviewFromLibrary {
   border: 3px solid black;
@@ -18,27 +13,7 @@
 
 }
 
-.albumPreviewPoster {
-  width: 50px;
-  height: 50px;
-}
 
-.albumPreview {
-  border: 2px solid red;
-}
-
-.artistLibraryPreview {
-  border: 3px dotted blue;
-  height: 100px;
-  width: 100px;
-  overflow-y: scroll;
-}
-
-.artistLibraryPoster {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
 
 .trackView {
   color: green;
@@ -53,10 +28,128 @@
 }
 
 /********************************* new gen ***********************************/
+body {
+  height: 60rem;
+}
+
+
 #container {
-  background-color: red;
+  background-color: lightpink;
   margin: 2%;
   width: 92%;
-  height: 92%;
+  height: 70%;
   padding: 2%;
+  display: grid;
+  grid-template-columns: 15% auto;
+}
+
+.template {
+  border: 2px solid black;
+}
+
+.header {
+  height: 10%;
+  width: 100%;
+  background-color: lightblue;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 20% auto 20%;
+
+}
+
+.header-side {
+  width: auto;
+  border: 2px dotted white;
+}
+
+.header-center {
+  width: auto;
+  border: 2px dotted white;
+  padding: 5%;
+}
+
+.search-bar {
+  width: 80%;
+  height: 100%;
+  /* background-color: red; */
+  border-radius: 20px;
+  border: 0px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+
+.footer {
+  height: 5%;
+  text-align: center;
+  background-color: lightcyan;
+}
+
+
+#library {
+  height: auto;
+  padding: 5%;
+  border: 2px dotted white;
+}
+
+.artistLibraryPreview {
+  background-color: rgba(255, 255, 255, 0.2);
+  text-align: center;
+  font-family: 'Courier New', Courier, monospace;
+  height: 20%;
+  border: 1px dotted white;
+  border-radius: 20px;
+  padding: 5%;
+  margin-top: 5%;
+}
+
+
+.artistLibraryPoster {
+  width: 60%;
+  border-radius: 50%;
+}
+
+
+#main {
+  padding: 2%;
+  width: auto;
+  height: auto;
+  border: 2px dotted white;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  overflow-y: scroll;
+  /* justify-content: space-between; */
+  align-content: flex-start;
+  column-count: 3;
+  row-gap: 5%;
+  column-gap: 5%;
+
+}
+
+#main-info {
+  background-color: red;
+  width: 100%;
+  height: min-content;
+}
+
+
+.albumPreviewPoster {
+  width: 20%;
+}
+
+.albumPreview {
+  /* border: 2px dotted white; */
+  width: 30%;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+
+
+.artistPreview {
+  border: 3px dotted white;
+  height: 300px;
+  width: auto;
+  padding: 5% 10% 5% 10%;
+  overflow-y: scroll;
 }

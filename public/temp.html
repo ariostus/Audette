@@ -7,14 +7,98 @@
 </head>
 
 <body>
-  <div id="container">
-    <p>Hello</p>
+  <div class="header">
+    <h2 class="header-side">Audette</h2>
+    <div class="header-center">
+      <input id="artistSearchBar" type=text class="search-bar" placeholder="Search any artist..."></input>
+    </div>
+    <p class="header-side">Settings</p>
   </div>
+
+  <div id="container">
+
+    <div id="library">
+      <h2>Library</h2>
+      <div class="lib-el">Prova</div>
+    </div>
+
+    <div id="main">
+      <p id="main-info">Info</p>
+    </div>
+  </div>
+
+  <div class="footer">Footer</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div>
+    <h3>Startup</h3>
+    <p id="output">Odette</p>
+    <p id="logs"></p>
+    <button onclick="healthCheck()">Start</button>
+  </div>
+  <hr>
+  <!-- <div id="library"> -->
+  <!-- <h3>Library</h3> -->
+  <!-- <button onclick="loadLibrary()">Load</button> -->
+  <!-- </div> -->
+  <div id="results">
+    <h3>Artist search</h3>
+    <!-- <input type="text" id="artistSearchBar"> -->
+    <button onclick="artistLookup()">Go</button>
+    <p id="showResults">Search results are displayed here</p>
+    <img id="artistPoster" width="200">
+  </div>
+  <hr>
+  <div>
+    <h3>Add artist</h3>
+    <!-- <input type="text" id="artistId"> -->
+    <!-- <button onclick="addArtist(getArtistInfo())">Add</button> -->
+    <p id="addedArtist"></p>
+  </div>
+  <hr>
+  <!-- <div id="albums"> -->
+  <!-- <h3>View albums and releases</h3> -->
+  <!-- <input type="text" id="artistIdAlbums"> -->
+  <!-- <button onclick="showAlbums()">View</button> -->
+  <!-- <p id="showalbums"></p> -->
+  <!-- </div> -->
+  <hr>
+  <div>
+    <h3>Request Album</h3>
+    <!-- <button onclick="requestAlbum()">Go</button> -->
+    <p id="albumRequested"></p>
+  </div>
+  <hr>
+  <div id="tracks">
+    <h3>Songs</h3>
+    <p id="tracksOutput"></p>
+  </div>
+  <div id="queue">
+    <h3>Recent requests</h3>
+  </div>
+
 
 
 </body>
 
 
+<script src="interface.js"></script>
+<script src="tools.js"></script>
+<script src="classes.js"></script>
+<script src="script.js"></script>
 
 
 

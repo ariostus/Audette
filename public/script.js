@@ -93,6 +93,9 @@ async function healthCheck(){
 
 }
 
+
+healthCheck()
+
 // Callback for healtCheck, displays api/health response and errors
 async function healthCallback(response){
     let data = await response.text(); // response is a promise, so we have to resolve it first
@@ -130,7 +133,7 @@ async function errorParser(data){
 // Retrieve ROOT FOLDER PATH and sets it as global variable
 var rootPath = "";
 async function setRoot(){
-    let request = new Request(lidarr+"rootfolder"+auth, {
+    let request = new Request("/setroot", {
         method: "GET",
         headers: basicHeaders
     });
@@ -146,7 +149,7 @@ var qualityProfile = 0;
 
 // get available metadata profiles
 async function getMetaProfiles(){
-    let url = lidarr + "metadataprofile" + auth;
+    let url = "/metaprofiles";
     let request = new Request(url, {
         headers: basicHeaders
     })
@@ -169,7 +172,7 @@ async function setMetaProfile(response){
 
 // get available quality profiles
 async function getQualityProfiles(){
-    let url = lidarr + "qualityprofile" + auth;
+    let url = "/qualityprofiles";
     let request = new Request(url, {
         headers: basicHeaders
     })
@@ -211,7 +214,7 @@ var library = {}; // List to be filled with Artist instances, to be accessed thr
 
 // used to get poster url for artist already in library
 function returnPoster(id){
-    let url = lidarr + "mediacover/artist/" + id + "/poster.jpg" + auth;
+    let url = "/returnposter" + `?id=${id}`;
     return url
 }
 
@@ -248,6 +251,7 @@ async function loadLibrary(){
 
 
 
+loadLibrary();
 async function loadLibraryCallback(response){
     console.log("coming")
     // fill library with artists
@@ -304,6 +308,7 @@ async function artistLookup(){
     clearAlbums();
     
     let term = artistSearchBar.value;
+    console.log("TERM", term)
     term = "?term=" + term.replace(" ", "%20") // include spaces in url
     // let suffix = "artist/lookup";
     // let url = lidarr + suffix + auth + term;
@@ -318,6 +323,7 @@ async function artistLookup(){
     console.log(request);
     await fetch(request).then((response) => artistLookupCallback(response));
     // artistLookupCallback(response)
+    return false
 }
 
 // callback for artistLookup
@@ -332,12 +338,12 @@ async function artistLookupCallback(response){
             // condition checks if artist is already in library - in that case "added" is an actual date/time value        
             if(json[j]["added"] == "0001-01-01T00:00:00Z"){
                 let artist = new Artist(json[j]); // creates new instance to show previews
-                results.appendChild(artist.lookupView()) // dom element from Artist class to show the artist as a search result
+                main.appendChild(artist.lookupView()) // dom element from Artist class to show the artist as a search result
             }
 
             else{
                 let currentId = json[j]["id"]; // this is the library id
-                results.appendChild(library[currentId].lookupFromLibraryView()); // call the dom creator method on the already existing artist
+                main.appendChild(library[currentId].lookupFromLibraryView()); // call the dom creator method on the already existing artist
             } 
         }   
     }
@@ -428,6 +434,7 @@ async function addArtistCallback(response){
     if (response.ok){
         let parsed = await response.json();
         id = parsed["id"];
+        console.log("\n\n\n", parsed, "\n\n\n");
         addedArtist.innerHTML = "<b>" + parsed["artistName"] + "</b>" + " added successfully to the library";
         library[id] = new Artist(parsed); // create a new Artist instance and push it in the library
 
@@ -524,7 +531,7 @@ async function showAlbumsCallback(response, artist){
                     element.appendChild(status.domElement());
                 }
                 
-                albums.appendChild(element);
+                main.appendChild(element);
                 album.reloadCover(); // to cope with delays
                 // console.log("Releases:", album.title, album.getRelease());
             }

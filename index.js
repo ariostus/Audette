@@ -4,7 +4,7 @@ const passport = require("passport-oauth2");
 
 
 const apikey = process.env.API_KEY;
-const auth =  "?apikey=" + apikey;
+const auth =  "?apikey="  + apikey;
 const lidarr = "http://127.0.0.1:8686/api/v1/";
 const basicHeaders = {"accept": "application/json"};
 const postHeaders = {"accept": "application/json", "Content-Type": "application/json"};
@@ -27,6 +27,21 @@ app.get('/health', async(request, response) => {
     response.send(r);
 })
 
+
+app.get("/setroot", async(request, response) => {
+    let r = await setRoot();
+    response.send(await r.json());
+})
+
+app.get("/metaprofiles", async(request, response) => {
+    let r = await getMetaProfiles();
+    response.send(await r.json());
+})
+
+app.get("/qualityprofiles", async(request, response) => {
+    let r = await getQualityProfiles();
+    response.send(await r.json());
+})
 
 app.get("/library", async(request, response) => {
     let r = await loadLibrary();
@@ -115,6 +130,16 @@ app.get("/returncover", async(request, response) => {
     response.send(Buffer.from(await r.bytes(), "binary"));
 })
 
+
+app.get("/returnposter", async(request, response) => {
+    let id = request.query["id"];
+    let r = await returnArtistPoster(id);
+    let headers = new Headers(r["headers"]);
+    let contentType = headers.get("content-type");
+    response.contentType(contentType);
+    response.send(Buffer.from(await r.bytes(), "binary"));
+})
+
 app.get("/queue", async(request, response) => {
     let r = await getQueue();
     response.send(await r.json());
@@ -149,8 +174,7 @@ async function setRoot(){
         headers: basicHeaders
     });
     let response = await fetch(request);
-    await response.json().then((json) => {rootPath = json[0]["path"]});
-    
+    return response 
 }
 
 
@@ -165,19 +189,10 @@ async function getMetaProfiles(){
         headers: basicHeaders
     })
 
-    await fetch(request).then((response) => setMetaProfile(response));
+    let response = await fetch(request);
+    return response
 }
 
-// find "Extended" (album, ep, single, studio, live) and set it
-async function setMetaProfile(response){
-    let json = await response.json();
-    let i = 0;
-    while(json[i]["name"] != "Extended"){
-        i++
-    }
-
-    metadataProfile = json[i]["id"];
-}
 
 
 
@@ -188,22 +203,9 @@ async function getQualityProfiles(){
         headers: basicHeaders
     })
 
-    await fetch(request).then((response) => setQualityProfile(response));
+    let response = await fetch(request);
+    return response
 }
-
-// find "Midquality" and set it 
-async function setQualityProfile(response){
-    let json = await response.json();
-    let i = 0;
-    while(json[i]["name"] != "MidQuality"){
-        i++
-    }
-
-    qualityProfile = json[i]["id"];
-    console.log(json)
-}
-
-
 
 
 
@@ -369,6 +371,17 @@ async function requestAlbum(body){
 async function returnAlbumCover(id){        
     let url = lidarr + "mediacover/album/" + id + "/cover.jpg" + auth;
 
+    let request = new Request(url, {
+                method: "GET",
+                headers: imgHeaders
+            });
+    console.log(request);
+    let response = await fetch(request);
+    return response;
+}
+
+async function returnArtistPoster(id){
+    let url = lidarr + "mediacover/artist/" + id + "/poster.jpg" + auth;
     let request = new Request(url, {
                 method: "GET",
                 headers: imgHeaders

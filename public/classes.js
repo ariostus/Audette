@@ -96,10 +96,14 @@ class Artist {
         img.classList.add("artistLibraryPoster");
         result.appendChild(img);
 
-        let btn = document.createElement("button");
-        btn.onclick = () => { this.showAlbums() };
-        btn.innerHTML = "View"
-        result.appendChild(btn)
+        // let btn = document.createElement("button");
+        // btn.onclick = () => { this.showAlbums() };
+        // btn.innerHTML = "View"
+        // result.appendChild(btn)
+
+        result.addEventListener("click",
+            () => this.showAlbums()
+        )
     
         return result
         
@@ -134,6 +138,7 @@ class Artist {
     }
 
     async addArtist(){
+        console.log("adding")
         addedArtist.innerHTML = "Loading...";
         let url = "/addartist";
         let folder = this.name.replace(" ", "");
