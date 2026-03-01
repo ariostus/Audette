@@ -222,7 +222,7 @@ function returnPoster(id){
 // load/reload library
 async function loadLibrary(){
     library = {}; // reset
-     clearLibrary();
+    clearLibrary();
         
     // let url = lidarr + "artist" + auth;i
     let url = "/library";
@@ -259,12 +259,21 @@ async function loadLibraryCallback(response){
     console.log(json)  
     for(let j=0; j<json.length; j++){
         let artist = new Artist(json[j]);
-        // console.log(artist.name, json[j]);
+         console.log(artist.name, json[j]);
+        //
+        // when reloading library, lidarr doesnt retrieve overview for artists already added,
+        // so try to keep the old one
+        if(library[artist.libId]){
+            console.log("in library")
+            artist.overview = (library[artist.libId]).overview;
+            console.log(artist.overview)
+        }
         library[artist.libId] = artist;
         artist.poster = returnPoster(artist.libId); 
         // console.log(artist.libraryView());
         
         libraryDiv.appendChild(artist.libraryView());
+        artist.reloadPoster();
     }
 
 }
@@ -338,11 +347,14 @@ async function artistLookupCallback(response){
             // condition checks if artist is already in library - in that case "added" is an actual date/time value        
             if(json[j]["added"] == "0001-01-01T00:00:00Z"){
                 let artist = new Artist(json[j]); // creates new instance to show previews
+                console.log(json[j]);
                 main.appendChild(artist.lookupView()) // dom element from Artist class to show the artist as a search result
             }
 
             else{
                 let currentId = json[j]["id"]; // this is the library id
+                // library[currentId].overview = json[j]["overview"];
+                console.log(library[currentId]);
                 main.appendChild(library[currentId].lookupFromLibraryView()); // call the dom creator method on the already existing artist
             } 
         }   
@@ -434,10 +446,10 @@ async function addArtistCallback(response){
     if (response.ok){
         let parsed = await response.json();
         id = parsed["id"];
-        console.log("\n\n\n", parsed, "\n\n\n");
+        console.log("\n\n\n", parsed["overview"], "\n\n\n");
         addedArtist.innerHTML = "<b>" + parsed["artistName"] + "</b>" + " added successfully to the library";
         library[id] = new Artist(parsed); // create a new Artist instance and push it in the library
-
+        console.log(library[id])
     }
 
     // response not ok
@@ -493,7 +505,7 @@ async function addArtistCallback(response){
 // }
 
 var retry = 0;
-const MAXRETRY = 20;
+const MAXRETRY = 10;
 
 async function showAlbumsCallback(response, artist){
     let json = await response.json();

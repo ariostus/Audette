@@ -17,6 +17,13 @@ app.use(express.static("./public"));
 app.use(express.json({limit: '1mb'}))
 
 
+
+function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+
 //***************************************************//
 //                    ROUTES                         //
 //***************************************************//
@@ -88,7 +95,9 @@ app.post("/releaseprofile", async(request, response) => {
 app.get("/queryindexers", async(request, response) => {
     let albumId = request.query["albumId"];
     let artistId = request.query["artistId"];
-    let r = await queryIndexers(albumId, artistId);
+    let r = await queryIndexers(albumId, artistId);function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
     response.send(await r.json());
 })
 
@@ -126,6 +135,9 @@ app.get("/returncover", async(request, response) => {
     let r = await returnAlbumCover(id);
     let headers = new Headers(r["headers"]);
     let contentType = headers.get("content-type");
+    if(!r.ok){
+        response.status(404);
+    }
     response.contentType(contentType);
     response.send(Buffer.from(await r.bytes(), "binary"));
 })
@@ -137,6 +149,9 @@ app.get("/returnposter", async(request, response) => {
     let headers = new Headers(r["headers"]);
     let contentType = headers.get("content-type");
     response.contentType(contentType);
+    if(!r.ok){
+        response.status(404);
+    }
     response.send(Buffer.from(await r.bytes(), "binary"));
 })
 
@@ -375,8 +390,18 @@ async function returnAlbumCover(id){
                 method: "GET",
                 headers: imgHeaders
             });
-    console.log(request);
+    // console.log(request);
     let response = await fetch(request);
+
+
+    // let retries = 0; // now wait for a 200 response - retrying once a sec
+    // const MAXRETRY = 20;
+    // while(!response.ok && retries < MAXRETRY){
+    //     retries++;
+    //     await sleep(1000);
+    //     response = await fetch(request);
+    //     console.log("retyring...", id)
+    // }
     return response;
 }
 

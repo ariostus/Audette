@@ -89,6 +89,7 @@ body {
   height: auto;
   padding: 5%;
   border: 2px dotted white;
+  overflow-y: scroll;
 }
 
 .artistLibraryPreview {

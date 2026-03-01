@@ -26,6 +26,7 @@ class Artist {
         this.libId = 0;
         this.remotePoster = "";
         this.poster = "";
+        this.libraryDom = 0;
 
         // this appens if artist is in library
         if(Object.keys(params).includes("id")){
@@ -37,7 +38,7 @@ class Artist {
     // speaks for itself
     getPoster(){
         let images = this.images;
-        if(images.length == 0){
+        if(!images){
             return 0
         }
 
@@ -92,7 +93,7 @@ class Artist {
 
         let img = document.createElement("img");
         img.src = this.poster; // this will be set by loadLibrary
-        img.alt = this.name;
+        img.alt = `[ ${this.name} poster ]`;
         img.classList.add("artistLibraryPoster");
         result.appendChild(img);
 
@@ -104,7 +105,8 @@ class Artist {
         result.addEventListener("click",
             () => this.showAlbums()
         )
-    
+
+        this.libraryDom = result;
         return result
         
         
@@ -127,6 +129,8 @@ class Artist {
         btn.onclick = () => { this.showAlbums() };
         btn.innerHTML = "View"
         result.appendChild(btn)
+
+        console.log(this.overview)
 
         if(this.overview){
             let info = document.createElement("p");
@@ -181,6 +185,33 @@ class Artist {
 
         await fetch(request).then( (response) => showAlbumsCallback(response, this) );  
 
+    }
+
+
+    
+    async reloadPoster(){
+        let img = this.libraryDom.querySelector(".artistLibraryPoster"); 
+        // let url = img.src;
+        let url = this.poster;
+        let request = new Request(url, {
+            method: "GET",
+            headers: {
+                "accept": "*/*"
+            }
+        }); // crafting query to mediacover api (just using images' own sources)
+        console.log(`\n\n\n Reloadin poster for ${this.name}\n\n\n`)
+        // console.log(request);
+        let response = await fetch(request);
+        console.log(response, response.ok)
+        let retries = 0; // now wait for a 200 response - retrying once a sec
+        while(!response.ok && retries < MAXRETRY){
+            retries++;
+            await sleep(1000);
+            response = await fetch(request);
+            console.log("retyring...")
+        }
+        // finally reload image: changing src fooling the cache
+        img.setAttribute("src", url + "#" + new Date().getTime());
     }
 
 
@@ -460,23 +491,26 @@ class Album {
 
 
     // keeps reloading album covers until the get request returns something good
-    // NOTE: doesn't communicate directly with lidarr, so it is allowed to stay here
     async reloadCover(){
         let img = this.dom.querySelector(".albumPreviewPoster"); 
-        let url = img.src;
+        // let url = img.src;
+        let url = this.cover;
         let request = new Request(url, {
             method: "GET",
             headers: {
                 "accept": "*/*"
             }
         }); // crafting query to mediacover api (just using images' own sources)
+        console.log(`\n\n\n Reloadin cover for ${this.title}\n\n\n`)
+        // console.log(request);
         let response = await fetch(request);
-
+        console.log(response, response.ok)
         let retries = 0; // now wait for a 200 response - retrying once a sec
         while(!response.ok && retries < MAXRETRY){
             retries++;
             await sleep(1000);
             response = await fetch(request);
+            console.log("retyring...")
         }
         // finally reload image: changing src fooling the cache
         img.setAttribute("src", url + "#" + new Date().getTime());
