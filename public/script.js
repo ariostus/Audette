@@ -1,7 +1,7 @@
 // MAIN LOGIC
 
 // Basic DOM elements
-// const output = document.getElementById("output");
+// const  = document.getElementById("output");
 // const logs = document.getElementById("logs");
 // const artistSearchBar = document.getElementById("artistSearchBar");
 // const showResults = document.getElementById("showResults");
@@ -102,19 +102,20 @@ async function healthCallback(response){
    // console.log("here", data)
     if (response.ok){
             if( !data.includes("error") ){  // response is 200 even though there are errors: it just means api is up
-                output.innerHTML = "All good to go!"
+                // output.innerHTML = "All good to go!"
+                console.log("All good to go!");
                 logs.innerHTML = "";
                 setRoot(); // if everything's fine we set root path
                 getQualityProfiles(); // set quality profile
                 getMetaProfiles(); // set metadata profile
             }
             else {
-                output.innerHTML = "An error occured."
+                console.log("An error occured.");
                 logs.innerHTML = await errorParser(data); // parser returns a promise, it needs to be resolved 
             }
         }
     else {
-        output.innerHTML = "Service temporarily unavailable. Please try again in a few minutes or contact support."
+        console.log("Service temporarily unavailable. Please try again in a few minutes or contact support.");
         completeFailure();
     } // this means request completely failed, so api is down
 }
@@ -447,7 +448,7 @@ async function addArtistCallback(response){
         let parsed = await response.json();
         id = parsed["id"];
         console.log("\n\n\n", parsed["overview"], "\n\n\n");
-        addedArtist.innerHTML = "<b>" + parsed["artistName"] + "</b>" + " added successfully to the library";
+        console.log("<b>" + parsed["artistName"] + "</b>" + " added successfully to the library");
         library[id] = new Artist(parsed); // create a new Artist instance and push it in the library
         console.log(library[id])
     }
@@ -456,10 +457,10 @@ async function addArtistCallback(response){
     else {
         // maybe the error is due to artist being already in library
         if(String(await response.text()).includes("This artist has already been added")){
-            addedArtist.innerHTML = "This artist has already been added."
+            console.log("This artist has already been added.")
         }
         else{
-            addedArtist.innerHTML = "An error occured. Please try again." // just failed
+            console.log("An error occured. Please try again.") // just failed
         }
         id = -1;
     }
@@ -505,7 +506,7 @@ async function addArtistCallback(response){
 // }
 
 var retry = 0;
-const MAXRETRY = 10;
+const MAXRETRY = 20;
 
 async function showAlbumsCallback(response, artist){
     let json = await response.json();
@@ -536,12 +537,12 @@ async function showAlbumsCallback(response, artist){
                 let element = album.domElement();
                 console.log("done");
 
-                // check whether to display a status widget or not - "queued" is just the global dict of albums involved
-                if(queued[album.id]){
-                    // console.log(queued[album.id]);
-                    let status = new Status(queued[album.id]);                  
-                    element.appendChild(status.domElement());
-                }
+                // // check whether to display a status widget or not - "queued" is just the global dict of albums involved
+                // if(queued[album.id]){
+                //     // console.log(queued[album.id]);
+                //     let status = new Status(queued[album.id]);                  
+                //     element.appendChild(status.domElement());
+                // }
                 
                 main.appendChild(element);
                 album.reloadCover(); // to cope with delays
@@ -725,16 +726,18 @@ async function deleteProfiles(){
 // callback for requestAlbum - display query results
 async function requestAlbumCallback(response){
       // console.log((response.text()))
+    let info = document.createElement("p");
     if (response.ok){
         let parsed = await response.json();
         console.log(parsed);
         let text = "<i>" + await parsed["albumTitle"] + "</i>" + " was successfully requested";
         console.log(text);
-        albumRequested.innerHTML = text;
+        info.innerHTML = text;
     }
     else {
-        albumRequested.innerHTML = "An error occured. Please try again."
+        info.innerHTML = "An error occured. Please try again."
     }
+    releasesDiv.appendChild(info);
 }
 
 
@@ -763,7 +766,7 @@ async function showTracks(album, id){
 
 async function showTracksCallback(response, album){
     if(!response.ok){
-        tracksOutput.innerHTML = "An error occured while fetching tracks." 
+        mainInfo.innerHTML = "An error occured while fetching tracks." 
         return;
     }
 
@@ -773,24 +776,74 @@ async function showTracksCallback(response, album){
     // clear space from old query
     clearTracks();
 
+    // they spawn inside the same div, so just be sure it is empty
+    clearAlbums();
+
+    switch2Normal();
+    switch2Tracks();
+    
+    // let tracksDiv = document.createElement("div");
+    // tracksDiv.id = "tracksDiv";
+    // main.appendChild(tracksDiv);
     // create Track instances for retrieved songs
     let discNumber = 1; 
     for(let j=0; j<json.length; j++){
         let track = new Track(json[j]);
+        
+
 
         // this means it's a different disc - just separate it for cleaner display
         if(track.number == "1"){
-            tracks.appendChild(document.createElement("hr"));
+            tracksDiv.appendChild(document.createElement("hr"));
             let discInfo = document.createElement("p");
             discInfo.innerHTML = `DISC ${discNumber}`;
             discInfo.classList.add("trackView");
-            tracks.appendChild(discInfo);
-            tracks.appendChild(document.createElement("hr"));
+            tracksDiv.appendChild(discInfo);
+            tracksDiv.appendChild(document.createElement("hr"));
             discNumber++;
         }
         
-        tracks.appendChild(track.domElement());
+        tracksDiv.appendChild(track.domElement());
     }
+
+    // let anyRel = document.createElement("p");
+    // // anyRel.innerHTML = "Standard - try this if everything else failed";
+    // anyRel.innerHTML = "Default";
+    // anyRel.id = `standardDownload${this.id}`;
+    // anyRel.classList.add("versionInfo");
+    // releasesDiv.appendChild(anyRel);
+
+    
+    // releasesDiv.appendChild(anyRel);
+
+    
+    // there's no point in trying to load the available releases, if this album has already been requested
+    if(!queued[album.id]){
+        let btn = document.createElement("button");
+        btn.innerHTML = "Fetch other releases";
+        btn.onclick = () => {
+            album.reloadRelease();
+        }
+        releasesDiv.appendChild(btn);
+
+        let btnDef = document.createElement("button");
+        btnDef.innerHTML = "Request";
+        btnDef.onclick = () => {
+            album.forceRelease(); // do not perform checks, just try to push it and hope for the best
+        }
+        releasesDiv.appendChild(btnDef);
+
+        
+    }
+
+    
+    // check whether to display a status widget or not - "queued" is just the global dict of albums involved
+    if(queued[album.id]){
+        // console.log(queued[album.id]);
+        let status = new Status(queued[album.id]);                  
+        releasesDiv.appendChild(status.domElement());
+    }
+
 
     // if(!album.statistics){
     //     tracksOutput.innerHTML = "Loading metadata... Please try again in a minute";
@@ -800,7 +853,7 @@ async function showTracksCallback(response, album){
     // else{
     //     tracksOutput.innerHTML = `<b>${album.title}</b> - ${json.length} songs found out of ${album.statistics["trackCount"]}`;
     // }
-    tracksOutput.innerHTML = `<b>${album.title}</b> - ${json.length} songs found`;
+    // tracksOutput.innerHTML = `<b>${album.title}</b> - ${json.length} songs found`;
 
 }
 
@@ -835,13 +888,17 @@ async function manageQueue(response){
     let records = json["records"]; // it consists of an array containing all information we need
     console.log(records);
 
-    clearQueue();
+    if($$$(main, "#queue")){
+        clearQueue();
 
-    for(let r=0; r<records.length; r++){
-        let status = new Status(records[r]);
-        let display = await status.domElementStandAlone();
-        queueDiv.appendChild(display);
-        queued[`${status.albumId}`] = status; 
+        for(let r=0; r<records.length; r++){
+            let status = new Status(records[r]);
+            let display = await status.domElementStandAlone();
+            queueDiv.appendChild(display);
+            queued[`${status.albumId}`] = status; 
+        }
+
+        
     }
 }
 

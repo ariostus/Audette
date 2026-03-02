@@ -143,7 +143,7 @@ class Artist {
 
     async addArtist(){
         console.log("adding")
-        addedArtist.innerHTML = "Loading...";
+        // innerHTML = "Loading...";
         let url = "/addartist";
         let folder = this.name.replace(" ", "");
         let dictBody = {
@@ -172,9 +172,16 @@ class Artist {
 
 
     async showAlbums(){
+        // tracksDiv = main;
+        // releasesDiv = main;
+        switch2Normal();
         clearResults();
         clearAlbums();
-        showalbums.innerHTML = "Loading..."
+
+        // set global value
+        currentArtist = this;
+        
+        // showalbums.innerHTML = "Loading..."
         
         // let url = lidarr + "album" + auth + "&artistId=" + this.libId + "&includeAllArtistAlbums=true";
         let url = "/showalbums" + `?libId=${this.libId}`;
@@ -278,35 +285,43 @@ class Album {
         //     showTracks(this);
         // }
         // preview.appendChild(view);
-        let anyRel = document.createElement("p");
-        // anyRel.innerHTML = "Standard - try this if everything else failed";
-        anyRel.innerHTML = "Default";
-        anyRel.id = `standardDownload${this.id}`;
-        anyRel.classList.add("versionInfo");
+        
+        // let view = document.createElement("button");
+        // view.innerHTML = "View";
+        // view.onclick = () => {
+        //     showTracks(this); // no id provided, generic version
+        // }
+        // anyRel.appendChild(view);
 
-        let view = document.createElement("button");
-        view.innerHTML = "View";
-        view.onclick = () => {
-            showTracks(this); // no id provided, generic version
-        }
-        anyRel.appendChild(view);
+        preview.addEventListener("click", () => {
+                // console.log(switch2Tracks(this.artist));
+                showTracks(this);
+            }
+        )
 
-        let btnDef = document.createElement("button");
-        btnDef.innerHTML = "Request";
-        btnDef.onclick = () => {
-            this.forceRelease(); // do not perform checks, just try to push it and hope for the best
-        }
-        anyRel.appendChild(btnDef);
-        preview.appendChild(anyRel);
+        // let anyRel = document.createElement("p");
+        // // anyRel.innerHTML = "Standard - try this if everything else failed";
+        // anyRel.innerHTML = "Default";
+        // anyRel.id = `standardDownload${this.id}`;
+        // anyRel.classList.add("versionInfo");
+
+        
+        // let btnDef = document.createElement("button");
+        // btnDef.innerHTML = "Request";
+        // btnDef.onclick = () => {
+        //     this.forceRelease(); // do not perform checks, just try to push it and hope for the best
+        // }
+        // anyRel.appendChild(btnDef);
+        // preview.appendChild(anyRel);
 
         
         
-        let btn = document.createElement("button");
-        btn.innerHTML = "Fetch other releases";
-        btn.onclick = () => {
-            this.reloadRelease();
-        }
-        preview.appendChild(btn);
+                // let btn = document.createElement("button");
+        // btn.innerHTML = "Fetch other releases";
+        // btn.onclick = () => {
+        //     this.reloadRelease();
+        // }
+        // preview.appendChild(btn);
 
         this.dom = preview;
         return preview
@@ -317,7 +332,7 @@ class Album {
         
         let preview = document.createElement("div");
         preview.id = this.id;
-        preview.classList.add("albumPreview");
+        preview.classList.add("albumPreviewQueue");
 
         let img = document.createElement("img");
         img.alt = `[ ${this.title} cover ]`;
@@ -329,12 +344,16 @@ class Album {
         info.innerHTML = `${this.title} <i>(${this.albumType})</i>`;
         preview.appendChild(info);
         
-        let view = document.createElement("button");
-        view.innerHTML = "View";
-        view.onclick = () => {
-            showTracks(this); // no id provided, generic version
-        }
-        preview.appendChild(view);
+        // let view = document.createElement("button");
+        // view.innerHTML = "View";
+        // view.onclick = () => {
+        //     showTracks(this); // no id provided, generic version
+        // }
+        // preview.appendChild(view);
+        //
+        preview.addEventListener("click", () => {
+            showTracks(this)
+        })
         return preview
     }
 
@@ -381,6 +400,8 @@ class Album {
 
     // keeps reloading album's releases to cope with Lidarr's delay
     async reloadRelease(){
+
+        
         //first thing first clear all release profiles (personal bad experience with that)
         await deleteProfiles();
         
@@ -432,14 +453,19 @@ class Album {
             relInfo.innerHTML = releases[j]["title"] + " <i>" + releases[j]["disambiguation"] + "</i>";
             relInfo.classList.add("versionInfo"); // again, used to delete the element
             relInfo.id = `r${this.id}-${j}`;
-            this.dom.appendChild(relInfo);
+            releasesDiv.appendChild(relInfo);
             
-            let view = document.createElement("button");
-            view.innerHTML = "View";
-            view.onclick = () => {
-                showTracks(this, releases[j]["id"]); // ask for specific release, not just generic
-            }
-            relInfo.appendChild(view);
+            // let view = document.createElement("button");
+            // view.innerHTML = "View";
+            // view.onclick = () => {
+            //     showTracks(this, releases[j]["id"]); // ask for specific release, not just generic
+            // }
+            // relInfo.appendChild(view);
+
+            let loading = document.createElement("span");
+            loading.innerHTML = " Loading...";
+            loading.id = `loading-${this.id}-${j}`;
+            relInfo.appendChild(loading);
 
             // Checks whether there are available downloads for specific release,
             // in which case a button for download is added; otherwise display "Fuck off"
@@ -457,14 +483,19 @@ class Album {
         
         let test = await this.getTorrentRelease(j); // performs getTorrent and checks its response
         console.log(test);
+        // releasesDiv.querySelector(`#r${this.id}-${j}`).querySelector(`loading-${this.id}-${j}`).innerHTML = "";
         // download is available
+        let element = releasesDiv.querySelector(`#r${this.id}-${j}`);
+        element.querySelector(`#loading-${this.id}-${j}`).innerHTML = " ";
+
         if(test){
             let btn = document.createElement("button");
             btn.innerHTML = "Request";
             btn.onclick = () => {
               this.requestAlbum(j);
             }
-            this.dom.querySelector(`#r${this.id}-${j}`).appendChild(btn);
+            releasesDiv.querySelector
+            element.appendChild(btn);
         }
 
         // an error occured
@@ -475,7 +506,7 @@ class Album {
                 no.innerHTML = ` <u>No downloads available</u>`;
                 console.log(no);
                 console.log(`#r${this.id}-${j}`)
-               this.dom.querySelector(`#r${this.id}-${j}`).appendChild(no); // that was relInfo created in reloadRelease 
+                element.appendChild(no); // that was relInfo created in reloadRelease 
             }
 
             // the error is due to album being already queued
@@ -484,7 +515,7 @@ class Album {
                 alreadyQueued.innerHTML = ` <u>Album already queued</u>`;
                 console.log(alreadyQueued);
                 console.log(`#q${this.id}-${j}`)
-                this.dom.querySelector(`#r${this.id}-${j}`).appendChild(alreadyQueued); // that was relInfo created in reloadRelease 
+                element.appendChild(alreadyQueued); // that was relInfo created in reloadRelease 
             }
         }     
     }
@@ -510,7 +541,7 @@ class Album {
             retries++;
             await sleep(1000);
             response = await fetch(request);
-            console.log("retyring...")
+            console.log("retrying...")
         }
         // finally reload image: changing src fooling the cache
         img.setAttribute("src", url + "#" + new Date().getTime());
@@ -711,14 +742,24 @@ class Track{
             let seconds = Math.floor(d%60);
             let minutes = (d-seconds)/60;
             let hours = (minutes-(minutes%60))/60;
-            minutes = minutes%60;
-            return `${hours}h ${minutes}m ${seconds}s`;
+            minutes = Math.floor(minutes%60);
+            if(minutes < 10){
+                minutes = `0${minutes}`;
+            }
+            if(seconds<10){
+                seconds = `0${seconds}`;
+            }
+            return `${hours}:${minutes}:${seconds}`;
         }
 
         else{
             let seconds = (d%60);
             let minutes = (d-seconds)/60;
-            return `${minutes}m ${parseInt(seconds)}s`;
+            seconds = Math.floor(seconds);
+            if(seconds<10){
+                seconds = `0${seconds}`;
+            }
+            return `${minutes}:${seconds}`;
         }
     }
 
@@ -774,11 +815,11 @@ class Status{
         
     }
 
-    // poor version, destined to be a child of Artist.domElement()
+    // poor version, destined to be a child of Album.domElement()
     domElement(){
         let status = document.createElement("div");
         status.innerHTML = `${this.albumId} - status: ${Math.ceil(this.percent*1000)/10}%  (${this.status}) ${this.statusMessages[0]? " - "+this.statusMessages[0]["title"]:""} \n `;
-        status.classList.add("queueElement");
+        status.classList.add("queueElement-display");
         return status
     }
 }

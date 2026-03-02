@@ -50,9 +50,9 @@ async function getAlbumFromId(id){
 }
 
 function clearTracks(){
-    let children = tracks.children;
-    while(children.length > 2){
-        tracks.removeChild(children[children.length-1]);
+    let children = tracksDiv.children;
+    while(children.length > 1){
+        tracksDiv.removeChild(children[children.length-1]);
     }
 }
 
