@@ -33,9 +33,11 @@ var releasesDiv = main;
 const tracksOutput = $("#tracksOutput");
 // const queueDiv = $("#queue");
 var queueDiv = 0;
-const mainInfo = $("#main-info")
+const mainInfo = $("#main-info");
+const mainInfoDiv = $("#main-info-div");
 const showalbums = mainInfo;
 const showResults = mainInfo;
+const audette = $("#audette");
 
 // used to get back from tracks view
 var currentArtist = 0;
@@ -52,6 +54,7 @@ function healthUI(){
 }
 
 
+
 artistSearchBar.addEventListener("keyup", (e) => {
   if(e.key == "Enter"){
     artistLookup();
@@ -59,10 +62,15 @@ artistSearchBar.addEventListener("keyup", (e) => {
 })
 
 
+audette.addEventListener("click", () => {home()});
+
+
+
 function switch2Tracks(){
   main.classList.remove("main");
   main.classList.add("main-tracks-view");
   // mainInfo.style.width = "auto";
+  mainInfo.innerHTML = "Tracks";
   // currentArtist = artist;
 
   let back = document.createElement("button");
@@ -85,7 +93,7 @@ function switch2Tracks(){
   // }
 
 
-  mainInfo.appendChild(back);
+  mainInfoDiv.appendChild(back);
 
   tracksDiv = document.createElement("div");
   tracksDiv.id = "tracksDiv";
@@ -109,13 +117,15 @@ function switch2Normal(){
   main.classList.remove("main-tracks-view");
   main.classList.add("main");
 
+  mainInfo.innerHTML = "Releases";
+  
   if($$$(main, "#queue")){
     main.removeChild($$$(main, "#queue"));
   }
 
-  let children = mainInfo.children;
-  while(children.length > 0){
-    mainInfo.removeChild(children[children.length - 1]);
+  let children = mainInfoDiv.children;
+  while(children.length > 1){
+    mainInfoDiv.removeChild(children[children.length - 1]);
   }  
   // mainInfo.style.width = "100%";
   // clearTracks();
@@ -143,11 +153,14 @@ function home(){
   queueDiv = document.createElement("div");
   queueDiv.id = "queue";
   main.appendChild(queueDiv);
+  getQueue();
 
   let title = document.createElement("h3");
   title.innerHTML = "Recent requests";
   title.classList.add("queueTitle");
   queueDiv.appendChild(title);
+
+  loadLibrary();
 
 }
 

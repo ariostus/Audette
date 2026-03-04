@@ -103,11 +103,12 @@ async function healthCallback(response){
     if (response.ok){
             if( !data.includes("error") ){  // response is 200 even though there are errors: it just means api is up
                 // output.innerHTML = "All good to go!"
-                console.log("All good to go!");
-                logs.innerHTML = "";
                 setRoot(); // if everything's fine we set root path
                 getQualityProfiles(); // set quality profile
                 getMetaProfiles(); // set metadata profile
+                console.log("All good to go!");
+                // loadLibrary();
+                home();
             }
             else {
                 console.log("An error occured.");
@@ -252,7 +253,6 @@ async function loadLibrary(){
 
 
 
-loadLibrary();
 async function loadLibraryCallback(response){
     console.log("coming")
     // fill library with artists
@@ -270,7 +270,10 @@ async function loadLibraryCallback(response){
             console.log(artist.overview)
         }
         library[artist.libId] = artist;
-        artist.poster = returnPoster(artist.libId); 
+        artist.poster = returnPoster(artist.libId);
+        if(!artist.images.length){
+            artist.poster = "unknown.png";
+        }
         // console.log(artist.libraryView());
         
         libraryDiv.appendChild(artist.libraryView());
@@ -342,6 +345,7 @@ async function artistLookupCallback(response){
     console.log(json)
     if (response.ok){
         showResults.innerHTML = "Results:";
+        switch2Normal();
 
         // show new results
         for(let j=0; j<json.length; j++){
@@ -446,11 +450,13 @@ async function addArtistCallback(response){
     let id = -1;
     if (response.ok){
         let parsed = await response.json();
+        console.log(parsed)
         id = parsed["id"];
         console.log("\n\n\n", parsed["overview"], "\n\n\n");
         console.log("<b>" + parsed["artistName"] + "</b>" + " added successfully to the library");
         library[id] = new Artist(parsed); // create a new Artist instance and push it in the library
         console.log(library[id])
+        library[id].showAlbums();
     }
 
     // response not ok
@@ -528,7 +534,7 @@ async function showAlbumsCallback(response, artist){
         if (response.ok){
             // let json = await response;
             console.log("ok", json.length, retry, MAXRETRY); 
-            showalbums.innerHTML = "Releases:"
+            showalbums.innerHTML = "Releases";
             
             // await sleep(1000);
             for(let i=0; i<json.length; i++){    
@@ -819,13 +825,6 @@ async function showTracksCallback(response, album){
     
     // there's no point in trying to load the available releases, if this album has already been requested
     if(!queued[album.id]){
-        let btn = document.createElement("button");
-        btn.innerHTML = "Fetch other releases";
-        btn.onclick = () => {
-            album.reloadRelease();
-        }
-        releasesDiv.appendChild(btn);
-
         let btnDef = document.createElement("button");
         btnDef.innerHTML = "Request";
         btnDef.onclick = () => {
@@ -833,7 +832,12 @@ async function showTracksCallback(response, album){
         }
         releasesDiv.appendChild(btnDef);
 
-        
+        let btn = document.createElement("button");
+        btn.innerHTML = "Fetch other releases";
+        btn.onclick = () => {
+            album.reloadRelease();
+        }
+        releasesDiv.appendChild(btn);      
     }
 
     
@@ -862,9 +866,14 @@ async function showTracksCallback(response, album){
 // QUEUE AND STATUS
 // Get queue and manage status (imported, failed, downloading...)
 
+var queueResponse = "";
 // perform basic GET request
 async function getQueue(){
     // let url = lidarr + "queue" + auth;
+    if(!$("#queue")){
+        return 0
+        console.log("Returning zero");
+    }
     let url = "/queue";
     let request = new Request(url, {
         method: "GET",
@@ -884,6 +893,7 @@ var queued = {}; // used to store albums that are being processed
 async function manageQueue(response){
     
     let json  = await response.json();
+    // let json = await response;
     console.log(json);
     let records = json["records"]; // it consists of an array containing all information we need
     console.log(records);
@@ -908,6 +918,10 @@ setInterval(
     10000
 );
 
+// setInterval(
+//     () => {manageQueue(queueResponse)},
+//     1000
+// )
 
 
 async function test(text){

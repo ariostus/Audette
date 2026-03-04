@@ -11,8 +11,14 @@
 
 
 /********************************* new gen ***********************************/
+html {
+  height: 100%;
+  width: 100%;
+}
+
 body {
-  height: 60rem;
+  height: 100%;
+  /* margin: 5%; */
 }
 
 
@@ -48,7 +54,7 @@ body {
 .header-center {
   width: auto;
   border: 2px dotted white;
-  padding: 5%;
+  padding: 2%;
 }
 
 .search-bar {
@@ -58,6 +64,7 @@ body {
   border-radius: 20px;
   border: 0px;
   background-color: rgba(255, 255, 255, 0.3);
+  font-size: 14pt;
 }
 
 
@@ -73,17 +80,24 @@ body {
   padding: 5%;
   border: 2px dotted white;
   overflow-y: scroll;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-count: 2;
+  justify-content: space-between;
 }
 
 .artistLibraryPreview {
   background-color: rgba(255, 255, 255, 0.2);
-  text-align: center;
-  font-family: 'Courier New', Courier, monospace;
-  height: 20%;
+  text-align: left;
+  /* font-family: 'Courier New', Courier, monospace; */
+  height: auto;
   border: 1px dotted white;
   border-radius: 20px;
   padding: 5%;
   margin-top: 5%;
+  width: 35%;
+  overflow-x: scroll;
 }
 
 
@@ -152,11 +166,12 @@ hr {
 
 
 
-#main-info {
-  background-color: red;
+#main-info-div {
+  /* background-color: red; */
   width: 100%;
   height: min-content;
   column-span: all;
+  border: 2px dotted white;
 }
 
 

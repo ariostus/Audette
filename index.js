@@ -182,7 +182,7 @@ async function healthCheck(){
 
 
 
-var rootPath = "";
+// var rootPath = "";
 async function setRoot(){
     let request = new Request(lidarr+"rootfolder"+auth, {
         method: "GET",
@@ -194,8 +194,8 @@ async function setRoot(){
 
 
 // Set Metadata and Quality profiles
-var metadataProfile = 0;
-var qualityProfile = 0;
+// var metadataProfile = 0;
+// var qualityProfile = 0;
 
 // get available metadata profiles
 async function getMetaProfiles(){

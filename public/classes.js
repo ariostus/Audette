@@ -38,8 +38,9 @@ class Artist {
     // speaks for itself
     getPoster(){
         let images = this.images;
-        if(!images){
-            return 0
+        console.log("images", images)
+        if(!images.length){
+            return "unknown.png" // it's a static-served image 
         }
 
         else{
@@ -61,18 +62,20 @@ class Artist {
 
         let img = document.createElement("img");
         img.src = this.getPoster(); // use the external source, as lidarr does not have it yet
+        // img.src = this.poster;
         img.alt = `[ ${this.name} poster ]`;
         img.classList.add("artistPreviewPoster");
         result.appendChild(img);
 
-        let btn = document.createElement("button");
-        btn.onclick = async() => { 
-            await this.addArtist().then(
-                () => {this.showAlbums();} // showAlbums works only with library members
-            );
-        };
-        btn.innerHTML = "View"
-        result.appendChild(btn)
+        // let btn = document.createElement("button");
+        // btn.onclick = () => { this.addArtist() };
+        // btn.innerHTML = "View"
+        // result.appendChild(btn)
+
+        result.addEventListener("click",
+            () => this.addArtist()
+        )
+
 
         // ... sometimes may be good, sometimes may be shit
         if(this.overview){
@@ -125,11 +128,15 @@ class Artist {
         img.classList.add("artistPreviewPoster");
         result.appendChild(img);
 
-        let btn = document.createElement("button");
-        btn.onclick = () => { this.showAlbums() };
-        btn.innerHTML = "View"
-        result.appendChild(btn)
+        // let btn = document.createElement("button");
+        // btn.onclick = () => { this.showAlbums() };
+        // btn.innerHTML = "View"
+        // result.appendChild(btn)
+        result.addEventListener("click",
+            () => this.showAlbums()
+        )
 
+        
         console.log(this.overview)
 
         if(this.overview){
@@ -164,6 +171,7 @@ class Artist {
             body: JSON.stringify(dictBody)
         })  
 
+        console.log(request, this)
         let libId =  await fetch(request).then( async(response) => {return await addArtistCallback(response)} ); // I need to return library id for the artist,
         this.libId = libId;// storing it inside the Artist instance
         return libId;                                                                                             
@@ -216,6 +224,9 @@ class Artist {
             await sleep(1000);
             response = await fetch(request);
             console.log("retyring...")
+        }
+        if(retries >= MAXRETRY){
+            url = "unknown.png"
         }
         // finally reload image: changing src fooling the cache
         img.setAttribute("src", url + "#" + new Date().getTime());
@@ -697,11 +708,12 @@ class Album {
         }
 
         
-        let p = this.dom.querySelector(`#standardDownload${this.id}`);
+        let p = document.createElement("p");
 
         // the ultimate fail
         if(!release){
-            p.innerHTML = "No releases available at all... Sorry";
+            p.innerHTML = "No downloads available at all... Sorry";
+            releasesDiv.appendChild(p);
             return
         }
 
