@@ -57,7 +57,6 @@ class Artist {
     lookupView(){
         let result = document.createElement("div");
         result.id = this.id;
-        result.innerHTML = this.name;
         result.classList.add("artistPreview");
 
         let img = document.createElement("img");
@@ -67,6 +66,12 @@ class Artist {
         img.classList.add("artistPreviewPoster");
         result.appendChild(img);
 
+        let text = document.createElement("div");
+        result.appendChild(text);
+        
+        let title = document.createElement("h3");
+        title.innerHTML = this.name;
+        text.appendChild(title);
         // let btn = document.createElement("button");
         // btn.onclick = () => { this.addArtist() };
         // btn.innerHTML = "View"
@@ -81,7 +86,7 @@ class Artist {
         if(this.overview){
             let info = document.createElement("p");
             info.innerHTML = this.overview;
-            result.appendChild(info)
+            text.appendChild(info)
         }
 
         return result
@@ -171,6 +176,11 @@ class Artist {
             body: JSON.stringify(dictBody)
         })  
 
+        switch2Normal();
+        let p = document.createElement("p");
+        p.id = "loading";
+        p.innerHTML = "Loading...";
+        main.appendChild(p);
         console.log(request, this)
         let libId =  await fetch(request).then( async(response) => {return await addArtistCallback(response)} ); // I need to return library id for the artist,
         this.libId = libId;// storing it inside the Artist instance
@@ -221,7 +231,7 @@ class Artist {
         let retries = 0; // now wait for a 200 response - retrying once a sec
         while(!response.ok && retries < MAXRETRY){
             retries++;
-            await sleep(1000);
+            await sleep(10000);
             response = await fetch(request);
             console.log("retyring...")
         }
@@ -260,6 +270,7 @@ class Album {
         this.remotePoster = params["remotePoster"];
         this.artist = params["artist"]["id"];
         this.releases = params["releases"];
+        this.releaseDate = params["releaseDate"];
         this.cover = "";
         this.dom = "";
     }
@@ -286,10 +297,30 @@ class Album {
         img.classList.add("albumPreviewPoster");
         preview.appendChild(img);
 
-        let info = document.createElement("p");
-        info.innerHTML = this.title + "<i> (" + this.albumType + ")</i>" + `${this.statistics?(this.statistics["percentOfTracks"]?" - <b>Downloaded</b>":""):""}`;
+
+        let info = document.createElement("div");
         preview.appendChild(info);
 
+
+        let h = document.createElement("h3");
+        h.classList.add("album-title");
+        h.innerHTML = this.title;
+        info.appendChild(h);
+        
+        let t = document.createElement("h4");
+        t.classList.add("album-type");
+        t.innerHTML = `${this.albumType}`;
+        info.appendChild(t);
+
+        let p = document.createElement("p");
+        p.classList.add("album-downloaded"); 
+        p.innerHTML = `${this.statistics?(this.statistics["percentOfTracks"]?"Downloaded":""):""}`;
+        info.appendChild(p);
+
+        let d = document.createElement("p");
+        d.classList.add("album-releaseDate");
+        d.innerHTML = this.releaseDate.split("T")[0];
+        info.appendChild(d);
         // let view = document.createElement("button");
         // view.innerHTML = "View";
         // view.onclick = () => {
@@ -466,12 +497,12 @@ class Album {
             relInfo.id = `r${this.id}-${j}`;
             releasesDiv.appendChild(relInfo);
             
-            // let view = document.createElement("button");
-            // view.innerHTML = "View";
-            // view.onclick = () => {
-            //     showTracks(this, releases[j]["id"]); // ask for specific release, not just generic
-            // }
-            // relInfo.appendChild(view);
+            let view = document.createElement("button");
+            view.innerHTML = "View";
+            view.onclick = () => {
+                showTracks(this, releases[j]["id"]); // ask for specific release, not just generic
+            }
+            relInfo.appendChild(view);
 
             let loading = document.createElement("span");
             loading.innerHTML = " Loading...";
@@ -480,7 +511,7 @@ class Album {
 
             // Checks whether there are available downloads for specific release,
             // in which case a button for download is added; otherwise display "Fuck off"
-            this.addRequestButton(j);        
+            await this.addRequestButton(j);        
         }
 
         // actually, if releases.length = 1, that release is the same as the following... whatever
@@ -550,7 +581,7 @@ class Album {
         let retries = 0; // now wait for a 200 response - retrying once a sec
         while(!response.ok && retries < MAXRETRY){
             retries++;
-            await sleep(1000);
+            await sleep(3000);
             response = await fetch(request);
             console.log("retrying...")
         }
@@ -573,6 +604,7 @@ class Album {
   
         // "required" will be version's own disambiguation
         // "ignored" (which is "excluded") is set to other releases' disambiguations
+        console.log(`\n\n\n ${this.releases[id]}\n\n\n`);
         let required = [this.releases[id]["disambiguation"]];
         if(required[0] == ""){
             required = []; // api does not accept an empty string
@@ -690,6 +722,12 @@ class Album {
     async forceRelease(){
         await deleteProfiles();
         // let url = lidarr + "release" + auth + `&albumId=${this.id}&artistId${this.artist}`;
+        // let p = document.createElement("p");
+        let p = outputReleasesDiv;
+        p.innerHTML = "Loading..."
+        releasesDiv.appendChild(p);
+
+        
         let url = "/queryindexers" + `?albumId=${this.id}&artistId=${this.artist}`;
         let request = new Request(url, {
             method: "GET",
@@ -708,12 +746,10 @@ class Album {
         }
 
         
-        let p = document.createElement("p");
 
         // the ultimate fail
         if(!release){
             p.innerHTML = "No downloads available at all... Sorry";
-            releasesDiv.appendChild(p);
             return
         }
 

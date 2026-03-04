@@ -111,6 +111,7 @@ app.post("/release", async(request, response) => {
 app.get("/tracks", async(request, response) => {
     let albumId = request.query["albumId"];
     let releaseId =request.query["albumReleaseId"];
+    console.log(albumId, releaseId, request.query);
     let r = await showTracks(albumId, releaseId);
     response.send(await r.json());
     
@@ -344,7 +345,7 @@ async function reloadRelease(id){
 
 async function getTorrentRelease(body){
         let url = lidarr + "releaseprofile" + auth;
-        console.log(url, required, ignored)
+        console.log(url, body);
         let request = new Request(url, {
             method: "POST",
             headers: postHeaders,
@@ -428,9 +429,9 @@ async function showTracks(albumId, releaseId){
     // id is actually optional - it depends on which function is calling it
     let url;
     let id = parseInt(releaseId);
-    console.log(id);
+    console.log(id, releaseId, albumId);
     if(id!=0){
-        url = lidarr + "track" + auth + "&albumId=" + albumId + "&albumReleaseId" + releaseId; // specific album release
+        url = lidarr + "track" + auth + "&albumReleaseId=" + releaseId; // specific album release
     }
     else{
         url = lidarr + "track" + auth + "&albumId=" + albumId; // general release

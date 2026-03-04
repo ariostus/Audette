@@ -448,6 +448,7 @@ async function addArtistCallback(response){
     // console.log((response.text()))
     console.log(`\n\n${response}\n\n`);
     let id = -1;
+    main.removeChild($$$(main, "#loading"));
     if (response.ok){
         let parsed = await response.json();
         console.log(parsed)
@@ -512,7 +513,7 @@ async function addArtistCallback(response){
 // }
 
 var retry = 0;
-const MAXRETRY = 20;
+const MAXRETRY = 10;
 
 async function showAlbumsCallback(response, artist){
     let json = await response.json();
@@ -533,7 +534,8 @@ async function showAlbumsCallback(response, artist){
         console.log(response)
         if (response.ok){
             // let json = await response;
-            console.log("ok", json.length, retry, MAXRETRY); 
+            console.log("ok", json.length, retry, MAXRETRY);
+            console.log(json) 
             showalbums.innerHTML = "Releases";
             
             // await sleep(1000);
@@ -732,7 +734,8 @@ async function deleteProfiles(){
 // callback for requestAlbum - display query results
 async function requestAlbumCallback(response){
       // console.log((response.text()))
-    let info = document.createElement("p");
+    // let info = document.createElement("p");
+    let info = outputReleasesDiv;
     if (response.ok){
         let parsed = await response.json();
         console.log(parsed);
@@ -755,7 +758,7 @@ async function showTracks(album, id){
     // id is actually optional - it depends on which function is calling it
     let url;
     if(id){
-        url = "/tracks" + "?albumId=" + album.id + "&albumReleaseId" + id; // specific album release
+        url = "/tracks" + "?albumId=" + album.id + "&albumReleaseId=" + id; // specific album release
     }
     else{
         url = "/tracks" + "?albumId=" + album.id + "&albumReleaseId=0"; // general release
@@ -783,10 +786,11 @@ async function showTracksCallback(response, album){
     clearTracks();
 
     // they spawn inside the same div, so just be sure it is empty
-    clearAlbums();
-
-    switch2Normal();
-    switch2Tracks();
+    if(!tracksMode){
+        clearAlbums();
+        switch2Normal();
+        switch2Tracks();
+    }
     
     // let tracksDiv = document.createElement("div");
     // tracksDiv.id = "tracksDiv";
@@ -824,9 +828,10 @@ async function showTracksCallback(response, album){
 
     
     // there's no point in trying to load the available releases, if this album has already been requested
-    if(!queued[album.id]){
+    if(!queued[album.id] && !$("#btndef")){
         let btnDef = document.createElement("button");
         btnDef.innerHTML = "Request";
+        btnDef.id = "btndef";
         btnDef.onclick = () => {
             album.forceRelease(); // do not perform checks, just try to push it and hope for the best
         }

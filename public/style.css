@@ -1,15 +1,3 @@
-.artistPreviewFromLibrary {
-  border: 3px solid black;
-  height: 300px;
-  overflow-y: scroll;
-  background-color: lightseagreen;
-
-}
-
-
-
-
-
 /********************************* new gen ***********************************/
 html {
   height: 100%;
@@ -85,13 +73,14 @@ body {
   flex-wrap: wrap;
   column-count: 2;
   justify-content: space-between;
+  align-content: flex-start;
 }
 
 .artistLibraryPreview {
   background-color: rgba(255, 255, 255, 0.2);
   text-align: left;
   /* font-family: 'Courier New', Courier, monospace; */
-  height: auto;
+  height: fit-content;
   border: 1px dotted white;
   border-radius: 20px;
   padding: 5%;
@@ -182,7 +171,7 @@ hr {
 .albumPreview {
   /* border: 2px dotted white; */
   width: 30%;
-  height: 25%;
+  height: 15%;
   background-color: rgba(255, 255, 255, 0.3);
   display: flex;
   border-radius: 12pt;
@@ -198,14 +187,44 @@ hr {
   flex-direction: row;
 }
 
+.album-title {
+  margin: 0;
+  /* color: red; */
+}
+
+.album-type {
+  margin: 0;
+  font-style: italic;
+}
+
+.album-releaseDate {
+  margin: 0;
+}
+
+.album-downloaded {
+  margin: 0;
+  text-decoration: underline;
+}
+
 
 
 .artistPreview {
   border: 3px dotted white;
-  height: 300px;
-  width: auto;
+  height: 30%;
+  width: 100%;
   padding: 5% 10% 5% 10%;
   overflow-y: scroll;
+  display: flex;
+}
+
+
+.artistPreviewFromLibrary {
+  border: 3px dotted lightseagreen;
+  height: 30%;
+  width: 100%;
+  padding: 5% 10% 5% 10%;
+  overflow-y: scroll;
+  color: lightseagreen;
 }
 
 
