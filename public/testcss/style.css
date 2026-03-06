@@ -1,0 +1,109 @@
+:root {
+  --color1: #e45ca2;
+  --color2: #15183e;
+}
+
+
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: linear-gradient(60deg, var(--color1), var(--color2));
+}
+
+
+.glass {
+  width: 500px;
+  height: auto;
+  position: absolute;
+  padding: 5%;
+  border-radius: 50px;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  --border: 3px;
+
+  backdrop-filter: blur(10px);
+  border: var(--border) solid rgba(0, 0, 0, 0.06);
+  /* background-color: rgba(255, 255, 255, 0.04); */
+  background: radial-gradient(rgba(255, 255, 255, 0.1), transparent);
+  box-shadow: rgba(20, 20, 60, 0.3) 0 10px 20px 2px;
+
+
+  color: rgba(200, 200, 200);
+  font-family: 'Courier New', Courier, monospace;
+
+}
+
+
+.glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  border-radius: inherit;
+
+
+
+  padding: var(--border);
+
+  background:
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.3) 0, transparent 10%),
+    linear-gradient(-235deg, rgba(255, 255, 255, 0.3) 0, transparent 10%);
+
+  mask:
+    linear-gradient(#000, #000) content-box,
+    linear-gradient(#000, #000);
+
+  mask-composite: exclude;
+  margin: calc(-1*var(--border));
+}
+
+
+
+
+.glass:active {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(5px);
+}
+
+
+
+
+
+
+
+
+
+
+
+.circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: linear-gradient(var(--color1), var(--color2));
+  position: absolute;
+  z-index: 0;
+}
+
+#circle1 {
+  left: 60%;
+  top: 20%;
+  transform: rotate(-30deg);
+}
+
+#circle2 {
+  left: 32%;
+  top: 40%;
+  transform: rotate(30deg);
+  transform: scale(1.1);
+
+}
