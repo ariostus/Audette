@@ -76,7 +76,7 @@ const postHeaders = {"accept": "application/json", "Content-Type": "application/
 
 
 
-
+var downloaded = []
 
 
 //*************************************************************************************//
@@ -315,10 +315,11 @@ async function loadLibraryCallback(response){
 // Search for specific artist through GET ArtistLookup schema
 async function artistLookup(){
     // first thing first clean the page and display loading status
-    showResults.innerHTML = "Loading..."
 
+    switch2Normal();
     clearResults();
     clearAlbums();
+    showResults.innerHTML = "Loading..."
     
     let term = artistSearchBar.value;
     console.log("TERM", term)
@@ -739,14 +740,26 @@ async function requestAlbumCallback(response){
     if (response.ok){
         let parsed = await response.json();
         console.log(parsed);
+        clearReleasesDiv();
+
+
         let text = "<i>" + await parsed["albumTitle"] + "</i>" + " was successfully requested";
         console.log(text);
         info.innerHTML = text;
+        
+        while(!queued[parsed[""]]){
+            await sleep(500);
+            await getQueue(1);
+        }
+        
+        switch2Normal();
+        showTracks(this);
+
     }
     else {
         info.innerHTML = "An error occured. Please try again."
     }
-    releasesDiv.appendChild(info);
+    // releasesDiv.appendChild(info);
 }
 
 
@@ -780,7 +793,7 @@ async function showTracksCallback(response, album){
     }
 
     let json = await response.json(); // suppose everything's fine and parse songs
-    console.log(json);
+    console.log(json, tracksMode);
     
     // clear space from old query
     clearTracks();
@@ -828,9 +841,9 @@ async function showTracksCallback(response, album){
 
     
     // there's no point in trying to load the available releases, if this album has already been requested
-    if(!queued[album.id] && !$("#btndef")){
+    if(!queued[album.id] && !$("#btndef") && !downloaded.includes(album.id)){
         let btnDef = document.createElement("button");
-        btnDef.innerHTML = "Request";
+        btnDef.innerHTML = "Default request";
         btnDef.id = "btndef";
         btnDef.onclick = () => {
             album.forceRelease(); // do not perform checks, just try to push it and hope for the best
@@ -838,7 +851,7 @@ async function showTracksCallback(response, album){
         releasesDiv.appendChild(btnDef);
 
         let btn = document.createElement("button");
-        btn.innerHTML = "Fetch other releases";
+        btn.innerHTML = "Fetch available releases";
         btn.onclick = () => {
             album.reloadRelease();
         }
@@ -851,6 +864,13 @@ async function showTracksCallback(response, album){
         // console.log(queued[album.id]);
         let status = new Status(queued[album.id]);                  
         releasesDiv.appendChild(status.domElement());
+    }
+
+    // same thing, but the album is already downloaded and ready for streaming
+    if(downloaded.includes(album.id)){
+        let p = document.createElement("p");
+        p.innerHTML = "Album already downloaded!";
+        releasesDiv.appendChild(p);
     }
 
 
@@ -873,9 +893,10 @@ async function showTracksCallback(response, album){
 
 var queueResponse = "";
 // perform basic GET request
-async function getQueue(){
+async function getQueue(force=0){
     // let url = lidarr + "queue" + auth;
-    if(!$("#queue")){
+    console.log(`\n\n ${force} \n\n`);
+    if(!$("#queue") && !force){
         return 0
         console.log("Returning zero");
     }
@@ -888,6 +909,7 @@ async function getQueue(){
     console.log(request);
 
     await fetch(request).then( (response) => {manageQueue(response)} );
+    return 0;
 }
 
 
@@ -903,17 +925,18 @@ async function manageQueue(response){
     let records = json["records"]; // it consists of an array containing all information we need
     console.log(records);
 
+
     if($$$(main, "#queue")){
         clearQueue();
+    }
 
-        for(let r=0; r<records.length; r++){
-            let status = new Status(records[r]);
+    for(let r=0; r<records.length; r++){
+        let status = new Status(records[r]);
+        queued[`${status.albumId}`] = status; 
+        if($$$(main, "#queue")){
             let display = await status.domElementStandAlone();
             queueDiv.appendChild(display);
-            queued[`${status.albumId}`] = status; 
-        }
-
-        
+        }     
     }
 }
 

@@ -28,8 +28,8 @@ const results = $("#results"); // div containing search bar and search results
 const libraryDiv = $("#library");
 // const tracks = $("#tracks");
 // const tracksDiv = $("#tracksDiv");
-var tracksDiv = main;
-var releasesDiv = main;
+var tracksDiv = 0;
+var releasesDiv = 0;
 const tracksOutput = $("#tracksOutput");
 // const queueDiv = $("#queue");
 var queueDiv = 0;
@@ -77,22 +77,16 @@ function switch2Tracks(){
     let back = document.createElement("button");
     back.innerHTML = "<";
     back.onclick = () => {
-      switch2Normal();
-      library[currentArtist.libId].showAlbums();
+      if(!currentArtist){
+        home();
+      }
+      else{
+        switch2Normal();
+        library[currentArtist.libId].showAlbums();
+      }
+      // tracksMode = 0;
     
     };
-
-    // let children = mainInfo.children;
-    // while(children.length > 1){
-    //   mainInfo.removeChild(children[children.length-1]);
-    // }
-
-  
-    // children = releasesDiv.children;
-    // while(children.length > 1){
-    //   releasesDiv.removeChild(children[children.length-1]);
-    // }
-
 
     mainInfoDiv.appendChild(back);
 
@@ -107,16 +101,11 @@ function switch2Tracks(){
     outputReleasesDiv = document.createElement("p");
     outputReleasesDiv.id = "outputReleases";
     releasesDiv.appendChild(outputReleasesDiv);
-
-    // return tracksDiv;
-    // tracks = tracksDiv;
-
-    // let releases = document.createElement("div");
-    // releases.id = "releasesDiv";
-    // main.appendChild(releasesDiv);
-    // releasesDiv = releases;
-     tracksMode = 1;
+    tracksMode = 1;
 }
+
+
+
 
 function switch2Normal(){
     main.classList.remove("main-tracks-view");
@@ -155,6 +144,14 @@ function home(){
     while(children.length > 1){
       main.removeChild(children[children.length - 1]);
     }
+
+    
+    mainInfo.innerHTML = "Home";
+
+    children = mainInfoDiv.children;
+    while(children.length > 1){
+      mainInfoDiv.removeChild(children[children.length - 1]);
+    }  
   
     queueDiv = document.createElement("div");
     queueDiv.id = "queue";
@@ -168,27 +165,36 @@ function home(){
 
     loadLibrary();
 
+    tracksMode = 0;
+
 }
 
 
 
-function switch2NormalFromAlbum(){
-    main.classList.remove("main-tracks-view");
-    main.classList.add("main");
+// function switch2NormalFromAlbum(){
+//     main.classList.remove("main-tracks-view");
+//     main.classList.add("main");
 
 
-    // mainInfo.style.width = "100%";
-    // clearTracks();
-    // library[currentArtist].showAlbums();
-    if(tracksDiv != main){
-      main.removeChild(tracksDiv);
-    }
+//     // mainInfo.style.width = "100%";
+//     // clearTracks();
+//     // library[currentArtist].showAlbums();
+//     if(tracksDiv != main){
+//       main.removeChild(tracksDiv);
+//     }
 
-    if(releasesDiv != main){
-      main.removeChild(releasesDiv);
-    }
+//     if(releasesDiv != main){
+//       main.removeChild(releasesDiv);
+//     }
 
-    tracksDiv = main;
-    releasesDiv = main;
+//     tracksDiv = main;
+//     releasesDiv = main;
   
+// }
+
+
+function requestSuccess(album){
+  switch2Normal();
+  switch2Tracks();
+  showTracks(album);
 }

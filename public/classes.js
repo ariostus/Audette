@@ -124,7 +124,7 @@ class Artist {
     // show artist which is already in library, as a search result
     lookupFromLibraryView(){
         let result = document.createElement("div");
-        result.innerHTML = this.name;
+        // result.innerHTML = this.name;
         result.classList.add("artistPreviewFromLibrary");
 
         let img = document.createElement("img");
@@ -133,28 +133,36 @@ class Artist {
         img.classList.add("artistPreviewPoster");
         result.appendChild(img);
 
-        // let btn = document.createElement("button");
-        // btn.onclick = () => { this.showAlbums() };
-        // btn.innerHTML = "View"
-        // result.appendChild(btn)
         result.addEventListener("click",
             () => this.showAlbums()
         )
 
-        
-        console.log(this.overview)
-
+        // ... sometimes may be good, sometimes may be shit
         if(this.overview){
             let info = document.createElement("p");
             info.innerHTML = this.overview;
-            result.appendChild(info)
+            text.appendChild(info)
         }
+
+
+        let text = document.createElement("div");
+        result.appendChild(text);
+        
+        let title = document.createElement("h3");
+        title.innerHTML = this.name;
+        text.appendChild(title);
 
         return result
     }
 
     async addArtist(){
         console.log("adding")
+        switch2Normal();
+        clearResults();
+        let p = document.createElement("p");
+        p.id = "loading";
+        p.innerHTML = "Loading...";
+        main.appendChild(p);
         // innerHTML = "Loading...";
         let url = "/addartist";
         let folder = this.name.replace(" ", "");
@@ -176,11 +184,6 @@ class Artist {
             body: JSON.stringify(dictBody)
         })  
 
-        switch2Normal();
-        let p = document.createElement("p");
-        p.id = "loading";
-        p.innerHTML = "Loading...";
-        main.appendChild(p);
         console.log(request, this)
         let libId =  await fetch(request).then( async(response) => {return await addArtistCallback(response)} ); // I need to return library id for the artist,
         this.libId = libId;// storing it inside the Artist instance
@@ -292,7 +295,7 @@ class Album {
         preview.classList.add("albumPreview");
 
         let img = document.createElement("img");
-        img.alt = `[ ${this.title} cover ]`;
+        img.alt = `[ album cover ]`;
         img.src = this.cover;
         img.classList.add("albumPreviewPoster");
         preview.appendChild(img);
@@ -317,10 +320,17 @@ class Album {
         p.innerHTML = `${this.statistics?(this.statistics["percentOfTracks"]?"Downloaded":""):""}`;
         info.appendChild(p);
 
-        let d = document.createElement("p");
-        d.classList.add("album-releaseDate");
-        d.innerHTML = this.releaseDate.split("T")[0];
-        info.appendChild(d);
+        // we also seize the opportunity to add this album to the downloaded list
+        if(this.statistics["percentOfTracks"]){
+            downloaded.push(this.id);
+        }
+
+        if(this.releaseDate){
+            let d = document.createElement("p");
+            d.classList.add("album-releaseDate");
+            d.innerHTML = this.releaseDate.split("T")[0];
+            info.appendChild(d);         
+        }
         // let view = document.createElement("button");
         // view.innerHTML = "View";
         // view.onclick = () => {
@@ -393,9 +403,6 @@ class Album {
         // }
         // preview.appendChild(view);
         //
-        preview.addEventListener("click", () => {
-            showTracks(this)
-        })
         return preview
     }
 
@@ -488,6 +495,8 @@ class Album {
         }
 
         console.log("check check");
+
+        clearReleases();
   
         for(let j=0; j<releases.length; j++){
             console.log(j);
@@ -543,7 +552,7 @@ class Album {
         // an error occured
         else{
             // none of the downloads was approved
-            if(!queued[this.id]){
+            if(!queued[this.id] && !downloaded.includes(this.id)){
                 let no = document.createElement("span");
                 no.innerHTML = ` <u>No downloads available</u>`;
                 console.log(no);
@@ -554,7 +563,7 @@ class Album {
             // the error is due to album being already queued
             else{
                 let alreadyQueued = document.createElement("span");
-                alreadyQueued.innerHTML = ` <u>Album already queued</u>`;
+                alreadyQueued.innerHTML = ` <u>Album already queued/downloaded</u>`;
                 console.log(alreadyQueued);
                 console.log(`#q${this.id}-${j}`)
                 element.appendChild(alreadyQueued); // that was relInfo created in reloadRelease 
@@ -597,18 +606,31 @@ class Album {
         let request;
         let response;
 
-        deleteProfiles(); // clear settings from different release's query
                 
         // craft a new ReleaseProfile, in order to search for specified release
         // and exclude other versions
   
         // "required" will be version's own disambiguation
         // "ignored" (which is "excluded") is set to other releases' disambiguations
-        console.log(`\n\n\n ${this.releases[id]}\n\n\n`);
-        let required = [this.releases[id]["disambiguation"]];
-        if(required[0] == ""){
-            required = []; // api does not accept an empty string
+        console.log(`\n\n\n ${this.releases[id]["title"]}, ${this.releases[id]["disambiguation"]}\n\n\n`);
+
+        let required = [];
+        
+        // a different title usually means a different version
+        let diff = this.releases[id]["title"].replace(this.title, "");
+        if(diff != ""){
+            required.push(diff);
         }
+
+        if(this.releases[id]["disambiguation"] != ""){
+            required.push(this.releases[id]["disambiguation"]);
+        }
+
+        
+        required = addVariants(required);
+        // if(reqired[0] == ""){
+        //     required = []; // api does not accept an empty string
+        // }
 
         let ignored = [];
             for(let r=0; r<this.releases.length; r++){
@@ -707,8 +729,23 @@ class Album {
             });
 
             console.log("Request:",request);
-            let response = await fetch(request)
-            requestAlbumCallback(response);
+            // let response = await fetch(request)
+            await fetch(request).then(
+                async() => {
+                clearReleasesDiv();
+                let p = document.createElement("p");
+                p.innerHTML = "Loading...";
+                releasesDiv.appendChild(p);            
+
+                while(!queued[this.id]){
+                    await sleep(500);
+                    await getQueue(1);
+                }
+            
+                switch2Normal();
+                showTracks(this);
+             });
+            // requestAlbumCallback(response);
         }
 
         else{
@@ -761,7 +798,20 @@ class Album {
         });
 
         console.log("Request:",request);
-        await fetch(request).then(() => { p.innerHTML = "Requested!" });
+        await fetch(request).then(
+            async() => {
+            clearReleasesDiv();
+            p.innerHTML = "Loading...";
+            releasesDiv.appendChild(p);            
+
+            while(!queued[this.id]){
+                await sleep(500);
+                await getQueue(1);
+            }
+            
+            switch2Normal();
+            showTracks(this);
+         });
     }
 
 }
@@ -850,7 +900,7 @@ class Status{
     // to be used in "Recent requests" (or something similar) section
     async domElementStandAlone(){
         let status = document.createElement("div");
-        status.innerHTML = `${this.albumId} - status: ${Math.ceil(this.percent*1000)/10}%  (${this.status}) ${this.statusMessages[0]? " - "+this.statusMessages[0]["title"]:""} \n `;
+        status.innerHTML = `${Math.ceil(this.percent*1000)/10}%  (${this.status}) ${this.statusMessages[0]? " - " + this.statusMessages[0]["title"]:""} \n `;
         status.classList.add("queueElement");
         let parsedAlbum = new Album(await getAlbumFromId(this.albumId));
         await parsedAlbum.setCover();
@@ -858,7 +908,11 @@ class Status{
         // albumEl.removeChild(albumEl.querySelector("button"));
         albumEl.id = "";
 
-        status.appendChild(albumEl)
+        status.addEventListener("click", () => {
+            console.log("fucking clicked");
+            showTracks(parsedAlbum);
+        })
+        status.appendChild(albumEl);
         return status
         
     }
@@ -866,7 +920,7 @@ class Status{
     // poor version, destined to be a child of Album.domElement()
     domElement(){
         let status = document.createElement("div");
-        status.innerHTML = `${this.albumId} - status: ${Math.ceil(this.percent*1000)/10}%  (${this.status}) ${this.statusMessages[0]? " - "+this.statusMessages[0]["title"]:""} \n `;
+        status.innerHTML = `${Math.ceil(this.percent*1000)/10}%  (${this.status}) ${this.statusMessages[0]? " - "+this.statusMessages[0]["title"]:""} \n `;
         status.classList.add("queueElement-display");
         return status
     }

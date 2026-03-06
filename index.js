@@ -95,9 +95,7 @@ app.post("/releaseprofile", async(request, response) => {
 app.get("/queryindexers", async(request, response) => {
     let albumId = request.query["albumId"];
     let artistId = request.query["artistId"];
-    let r = await queryIndexers(albumId, artistId);function sleep(ms){
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+    let r = await queryIndexers(albumId, artistId);
     response.send(await r.json());
 })
 
@@ -344,6 +342,7 @@ async function reloadRelease(id){
 
 
 async function getTorrentRelease(body){
+        deleteProfiles(); // clear settings from different release's query
         let url = lidarr + "releaseprofile" + auth;
         console.log(url, body);
         let request = new Request(url, {

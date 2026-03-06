@@ -2,6 +2,7 @@
 html {
   height: 100%;
   width: 100%;
+  font-size: 12pt;
 }
 
 body {
@@ -17,7 +18,7 @@ body {
   height: 70%;
   padding: 2%;
   display: grid;
-  grid-template-columns: 15% auto;
+  grid-template-columns: 25% auto;
 }
 
 .template {
@@ -80,13 +81,15 @@ body {
   background-color: rgba(255, 255, 255, 0.2);
   text-align: left;
   /* font-family: 'Courier New', Courier, monospace; */
-  height: fit-content;
+  height: auto;
   border: 1px dotted white;
   border-radius: 20px;
   padding: 5%;
   margin-top: 5%;
   width: 35%;
   overflow-x: scroll;
+  display: grid;
+  grid-template-rows: auto auto;
 }
 
 
@@ -165,16 +168,20 @@ hr {
 
 
 .albumPreviewPoster {
-  height: 100%;
+  width: 100%;
+  aspect-ratio: 1;
 }
 
 .albumPreview {
   /* border: 2px dotted white; */
   width: 30%;
-  height: 15%;
+  height: auto;
   background-color: rgba(255, 255, 255, 0.3);
-  display: flex;
+  display: grid;
   border-radius: 12pt;
+  font-size: 1rem;
+  grid-template-columns: 30% auto;
+  text-align: center;
 
 }
 
@@ -210,21 +217,24 @@ hr {
 
 .artistPreview {
   border: 3px dotted white;
-  height: 30%;
+  min-height: 30%;
+  height: fit-content;
   width: 100%;
   padding: 5% 10% 5% 10%;
-  overflow-y: scroll;
+  overflow-y: hidden;
   display: flex;
 }
 
 
 .artistPreviewFromLibrary {
+  color: lightseagreen;
   border: 3px dotted lightseagreen;
-  height: 30%;
+  min-height: 30%;
+  height: fit-content;
   width: 100%;
   padding: 5% 10% 5% 10%;
-  overflow-y: scroll;
-  color: lightseagreen;
+  overflow-y: hidden;
+  display: flex;
 }
 
 

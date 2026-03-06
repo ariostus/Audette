@@ -50,8 +50,11 @@ async function getAlbumFromId(id){
 }
 
 function clearTracks(){
+    if(!tracksDiv){
+        return 0;
+    }
     let children = tracksDiv.children;
-    while(children.length > 1){
+    while(children.length > 0){
         tracksDiv.removeChild(children[children.length-1]);
     }
 }
@@ -96,4 +99,36 @@ function clearQueue(){
     for(let q=0; q<oldQueue.length; q++){
         queueDiv.removeChild(oldQueue[q]);
     }
+}
+
+
+function clearReleases(){
+    let releases = releasesDiv.querySelectorAll(".versionInfo");
+    for(let r=0; r<releases.length; r++){
+        releasesDiv.removeChild(releases[r]);
+    }
+}
+
+function clearReleasesDiv(){
+    let children = releasesDiv.children;
+    while(children.length > 0){
+        releasesDiv.removeChild(children[children.length-1]);
+    }
+}
+
+function addVariants(self){
+    let lower = "";
+    let expanded = self;
+    for(let i=0; i<self.length; i++){
+        lower = lower + (self[i].toLowerCase());
+    }
+
+    if(lower.includes("remastered")){
+        expanded.push("remaster");
+    }
+
+    else if(lower.includes("remaster")){
+        expanded.push("remastered");
+    }
+    return expanded
 }
