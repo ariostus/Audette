@@ -28,7 +28,14 @@ body {
   /* radial-gradient(circle at 55% 72%, hsla(289, 40%, 28%, 1) 12%, transparent 53%), */
   /* radial-gradient(circle at 44% 25%, hsla(303, 64%, 86%, 1) 12%, transparent 53%), */
   /* radial-gradient(circle at 14% 6%, hsla(271, 74%, 17%, 1) 12%, transparent 53%); */
-  background-image: radial-gradient(circle at 39.31383163701294% 39.1458550749102%, hsla(267, 37%, 27%, 1) 10.384656300654019%, transparent 97.17243252552592%), radial-gradient(circle at -10.250120770440732% -25.493490446112492%, hsla(322, 57%, 81%, 1) 0%, transparent 50%), radial-gradient(circle at 25.454222026903818% 51.163035768380176%, hsla(237, 53%, 15%, 1) 5.073635381166413%, transparent 34.02422337695371%), radial-gradient(circle at 51.81686177068037% 45.006404881718495%, hsla(281, 76%, 30%, 1) 4.481434146454876%, transparent 46.604240439054536%), radial-gradient(circle at 64.6499519170738% -18.49658394097408%, hsla(292, 31%, 39%, 1) 4.641485365971122%, transparent 39.938103238702396%), radial-gradient(circle at 20.710693316761578% 97.88731950644753%, hsla(311, 34%, 53%, 1) 4.00128048790614%, transparent 41.399913820076975%), radial-gradient(circle at 67.95057422280537% 40.35158272818362%, hsla(255, 41%, 21%, 1) 25.125364826224157%, transparent 88.19089370690203%);
+  background-image: radial-gradient(circle at 39.31383163701294% 39.1458550749102%, hsla(267, 37%, 27%, 1) 10.384656300654019%, transparent 97.17243252552592%),
+    radial-gradient(circle at -10.250120770440732% -25.493490446112492%, hsla(322, 57%, 81%, 1) 0%, transparent 50%),
+    radial-gradient(circle at 25.454222026903818% 51.163035768380176%, hsla(237, 53%, 15%, 1) 5.073635381166413%, transparent 34.02422337695371%),
+    radial-gradient(circle at 51.81686177068037% 45.006404881718495%, hsla(281, 76%, 30%, 1) 4.481434146454876%, transparent 46.604240439054536%),
+    radial-gradient(circle at 64.6499519170738% -18.49658394097408%, hsla(292, 31%, 39%, 1) 4.641485365971122%, transparent 39.938103238702396%),
+    radial-gradient(circle at 20.710693316761578% 97.88731950644753%, hsla(311, 34%, 53%, 1) 4.00128048790614%, transparent 41.399913820076975%),
+    radial-gradient(circle at 67.95057422280537% 40.35158272818362%, hsla(255, 41%, 21%, 1) 25.125364826224157%, transparent 88.19089370690203%);
+
   background-color: hsla(237, 53%, 15%, 1);
 
 }
@@ -53,7 +60,6 @@ body {
   background: radial-gradient(rgba(255, 255, 255, 0.05) 0, transparent 50%);
   /* background-color: transparent; */
   box-shadow: rgba(20, 20, 60, 0.3) 0 10px 20px 2px;
-
 
 
   /* color: rgba(200, 200, 200); */

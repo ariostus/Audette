@@ -845,12 +845,18 @@ async function showTracksCallback(response, album){
         let btnDef = document.createElement("button");
         btnDef.innerHTML = "Default request";
         btnDef.id = "btndef";
+        btnDef.classList.add("button-releases");
+        btnDef.classList.add("glass");
+        btnDef.classList.add("glass-button");
         btnDef.onclick = () => {
             album.forceRelease(); // do not perform checks, just try to push it and hope for the best
         }
         releasesDiv.appendChild(btnDef);
 
         let btn = document.createElement("button");
+        btn.classList.add("button-releases");
+        btn.classList.add("glass");
+        btn.classList.add("glass-button");
         btn.innerHTML = "Fetch available releases";
         btn.onclick = () => {
             album.reloadRelease();

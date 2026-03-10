@@ -75,6 +75,7 @@ function switch2Tracks(){
     // currentArtist = artist;
 
     let back = document.createElement("button");
+    back.classList.add("button-back");
     back.innerHTML = "<";
     back.onclick = () => {
       if(!currentArtist){

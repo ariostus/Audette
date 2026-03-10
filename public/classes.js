@@ -98,6 +98,9 @@ class Artist {
         let result = document.createElement("div");
         result.innerHTML = this.name;
         result.classList.add("artistLibraryPreview");
+        result.classList.add("glass");
+        result.classList.add("glass-button");
+        // result.classList.add("no-shadow");
 
         let img = document.createElement("img");
         img.src = this.poster; // this will be set by loadLibrary
@@ -293,6 +296,8 @@ class Album {
         let preview = document.createElement("div");
         preview.id = this.id;
         preview.classList.add("albumPreview");
+        preview.classList.add("glass");
+        preview.classList.add("glass-button");
 
         let img = document.createElement("img");
         img.alt = `[ album cover ]`;
