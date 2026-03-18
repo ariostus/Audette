@@ -237,7 +237,8 @@ async function loadLibrary(){
     console.log("Library requested")
 
     let response = await fetch(request);
-    loadLibraryCallback(response);    
+    await loadLibraryCallback(response);
+    return 0;
     // // fill library with artists     
     // for(let j=0; j<json.length; j++){
     //     let artist = new Artist(json[j]);
@@ -279,6 +280,8 @@ async function loadLibraryCallback(response){
         libraryDiv.appendChild(artist.libraryView());
         artist.reloadPoster();
     }
+
+    return 0;
 
 }
 
@@ -449,15 +452,18 @@ async function addArtistCallback(response){
     // console.log((response.text()))
     console.log(`\n\n${response}\n\n`);
     let id = -1;
-    main.removeChild($$$(main, "#loading"));
+    // main.removeChild($$$(main, "#loading"));
+    
     if (response.ok){
         let parsed = await response.json();
         console.log(parsed)
         id = parsed["id"];
         console.log("\n\n\n", parsed["overview"], "\n\n\n");
         console.log("<b>" + parsed["artistName"] + "</b>" + " added successfully to the library");
+        // mainInfoDiv.innerHTML = parsed["artistName"];
         library[id] = new Artist(parsed); // create a new Artist instance and push it in the library
         console.log(library[id])
+        console.log("showing albums now", library[id]);
         library[id].showAlbums();
     }
 
@@ -801,10 +807,12 @@ async function showTracksCallback(response, album){
     // they spawn inside the same div, so just be sure it is empty
     if(!tracksMode){
         clearAlbums();
-        switch2Normal();
+        // switch2Normal();
         switch2Tracks();
     }
-    
+
+    libraryDiv.appendChild(album.domElementInfo());
+    libraryTitle.innerHTML = album.title;
     // let tracksDiv = document.createElement("div");
     // tracksDiv.id = "tracksDiv";
     // main.appendChild(tracksDiv);
@@ -817,6 +825,11 @@ async function showTracksCallback(response, album){
 
         // this means it's a different disc - just separate it for cleaner display
         if(track.number == "1"){
+            if(discNumber > 1){
+                let space = document.createElement("div");
+                space.classList.add("spacer");
+                tracksDiv.appendChild(space);
+            }
             tracksDiv.appendChild(document.createElement("hr"));
             let discInfo = document.createElement("p");
             discInfo.innerHTML = `DISC ${discNumber}`;
@@ -852,6 +865,16 @@ async function showTracksCallback(response, album){
             album.forceRelease(); // do not perform checks, just try to push it and hope for the best
         }
         releasesDiv.appendChild(btnDef);
+        let b = document.createElement("span");
+        b.innerHTML = "download_for_offline";
+        b.classList.add("material-symbols-outlined");
+        b.style.position = "relative";
+        b.style.left = "10%";
+        b.style.top = "50%";
+        b.style.transform = "translateY(-25%)";
+        
+    
+        btnDef.appendChild(b);
 
         let btn = document.createElement("button");
         btn.classList.add("button-releases");
@@ -861,13 +884,20 @@ async function showTracksCallback(response, album){
         btn.onclick = () => {
             album.reloadRelease();
         }
-        releasesDiv.appendChild(btn);      
+        releasesDiv.appendChild(btn);
+        releasesDiv.appendChild(document.createElement("hr"));      
+        let space = document.createElement("div");
+        space.classList.add("spacer");
+        releasesDiv.appendChild(space);
     }
 
     
     // check whether to display a status widget or not - "queued" is just the global dict of albums involved
     if(queued[album.id]){
         // console.log(queued[album.id]);
+        let p = document.createElement("p");
+        p.innerHTML = "Album requested successfully";
+        releasesDiv.appendChild(p);
         let status = new Status(queued[album.id]);                  
         releasesDiv.appendChild(status.domElement());
     }
@@ -949,7 +979,7 @@ async function manageQueue(response){
 getQueue();
 setInterval(
     () => {getQueue()},
-    10000
+    1000000
 );
 
 // setInterval(

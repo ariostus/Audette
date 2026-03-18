@@ -30,6 +30,39 @@ function cleanDuplicates(self){
 
 
 
+
+function parseDuration(self){
+    let d = self/1000;
+    if(d/60 > 60){
+        let seconds = Math.floor(d%60);
+        let minutes = (d-seconds)/60;
+        let hours = (minutes-(minutes%60))/60;
+        minutes = Math.floor(minutes%60);
+        if(minutes < 10){
+            minutes = `0${minutes}`;
+        }
+        if(seconds<10){
+            seconds = `0${seconds}`;
+        }
+        return `${hours} hr ${minutes} min ${seconds} sec`;
+    }
+
+    else{
+        let seconds = (d%60);
+        let minutes = (d-seconds)/60;
+        seconds = Math.floor(seconds);
+        if(seconds<10){
+            seconds = `0${seconds}`;
+        }
+        return `${minutes} min ${seconds} sec`;
+    }
+}
+
+
+
+
+
+
 function returnAlbumCover(album){        
     // let url = lidarr + "mediacover/album/" + album.id + "/cover.jpg" + auth;
     let url = "/returncover" + `?id=${album.id}`;
@@ -131,4 +164,17 @@ function addVariants(self){
         expanded.push("remastered");
     }
     return expanded
+}
+
+
+function showLibrary(){
+    for(let i=0; i<library.length; i++){
+        let artist = library[i];
+        artist.poster = returnPoster(artist.libId);
+        if(!artist.images.length){
+            artist.poster = "unknown.png";
+        }
+        libraryDiv.appendChild(artist.libraryView());
+        artist.reloadPoster();
+    }
 }

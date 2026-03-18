@@ -26,6 +26,7 @@ const albumRequested = $("#albumRequested");
 const artistPoster = $("#artistPoster");
 const results = $("#results"); // div containing search bar and search results
 const libraryDiv = $("#library");
+const libraryTitle = $("#library-title");
 // const tracks = $("#tracks");
 // const tracksDiv = $("#tracksDiv");
 var tracksDiv = 0;
@@ -76,13 +77,14 @@ function switch2Tracks(){
 
     let back = document.createElement("button");
     back.classList.add("button-back");
-    back.innerHTML = "<";
-    back.onclick = () => {
+    back.classList.add("material-symbols-outlined");
+    back.innerHTML = "chevron_left";
+    back.onclick = async() => {
       if(!currentArtist){
         home();
       }
       else{
-        switch2Normal();
+        await switch2Normal();
         library[currentArtist.libId].showAlbums();
       }
       // tracksMode = 0;
@@ -102,13 +104,20 @@ function switch2Tracks(){
     outputReleasesDiv = document.createElement("p");
     outputReleasesDiv.id = "outputReleases";
     releasesDiv.appendChild(outputReleasesDiv);
+
+
+    // libraryTitle.innerHTML = "Overview";
+    clearLibrary();
+
+
+
+
+    
     tracksMode = 1;
 }
 
 
-
-
-function switch2Normal(){
+async function switch2Normal(){
     main.classList.remove("main-tracks-view");
     main.classList.add("main");
 
@@ -133,6 +142,14 @@ function switch2Normal(){
       main.removeChild($$$(main, "#releasesDiv"));
     }
 
+    libraryTitle.innerHTML = "Library";
+    let albumOverview = $("#album-overview");
+    if(albumOverview){
+      libraryDiv.removeChild(albumOverview);
+    }
+
+    await loadLibrary();
+  
     console.log("Switched to normal");
     tracksMode = 0;
 }
@@ -163,6 +180,12 @@ function home(){
     title.innerHTML = "Recent requests";
     title.classList.add("queueTitle");
     queueDiv.appendChild(title);
+
+    libraryTitle.innerHTML = "Library";
+    let albumOverview = $("#album-overview");
+    if(albumOverview){
+      libraryDiv.removeChild(albumOverview);
+    }
 
     loadLibrary();
 

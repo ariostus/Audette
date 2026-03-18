@@ -58,11 +58,13 @@ class Artist {
         let result = document.createElement("div");
         result.id = this.id;
         result.classList.add("artistPreview");
+        result.classList.add("glass");
+
 
         let img = document.createElement("img");
         img.src = this.getPoster(); // use the external source, as lidarr does not have it yet
         // img.src = this.poster;
-        img.alt = `[ ${this.name} poster ]`;
+        img.alt = `[ poster ]`;
         img.classList.add("artistPreviewPoster");
         result.appendChild(img);
 
@@ -129,6 +131,8 @@ class Artist {
         let result = document.createElement("div");
         // result.innerHTML = this.name;
         result.classList.add("artistPreviewFromLibrary");
+        result.classList.add("artistPreview");
+        result.classList.add("glass");
 
         let img = document.createElement("img");
         img.src = this.poster; // this was set by loadLibrary on first load
@@ -155,6 +159,11 @@ class Artist {
         title.innerHTML = this.name;
         text.appendChild(title);
 
+        let p = document.createElement("p");
+        p.innerHTML = "<i> Artist already added to library </i>";
+        text.appendChild(p);
+        
+
         return result
     }
 
@@ -162,10 +171,11 @@ class Artist {
         console.log("adding")
         switch2Normal();
         clearResults();
-        let p = document.createElement("p");
-        p.id = "loading";
-        p.innerHTML = "Loading...";
-        main.appendChild(p);
+        // let p = document.createElement("p");
+        // p.id = "loading";
+        // p.innerHTML = "Loading...";
+        // main.appendChild(p);
+        mainInfoDiv.innerHTML = "Loading..."
         // innerHTML = "Loading...";
         let url = "/addartist";
         let folder = this.name.replace(" ", "");
@@ -326,7 +336,7 @@ class Album {
         info.appendChild(p);
 
         // we also seize the opportunity to add this album to the downloaded list
-        if(this.statistics["percentOfTracks"]){
+        if(this.statistics && this.statistics["percentOfTracks"]){
             downloaded.push(this.id);
         }
 
@@ -409,6 +419,67 @@ class Album {
         // preview.appendChild(view);
         //
         return preview
+    }
+
+
+    domElementInfo(){
+        let container = document.createElement("div");
+        container.id = "album-overview";
+
+        let img = document.createElement("img");
+        img.alt = `[ ${this.title} cover ]`;
+        img.src = this.cover;
+        img.classList.add("albumPreviewPoster");
+        img.style.width = "80%";
+        container.appendChild(img);
+
+        let date = document.createElement("p");
+        date.innerHTML = `${this.albumType} (${this.releaseDate.split("-")[0]})`;
+        date.style.fontStyle = "italic";
+        date.style.fontWeight = "400";
+        container.appendChild(date);
+
+        let durationDiv = document.createElement("div");
+        durationDiv.style.display = "flex";
+        durationDiv.classList.add("glass");
+        container.appendChild(durationDiv);
+        let duration = document.createElement("p");
+        duration.innerHTML = parseDuration(this.duration);
+        durationDiv.appendChild(duration);
+        let icon = document.createElement("span");
+        icon.classList.add("material-symbols-outlined");
+        icon.classList.add("inline-icon");
+        icon.innerHTML = "schedule";
+        durationDiv.insertBefore(icon, duration);
+
+        let ratingsDiv = document.createElement("div");
+        ratingsDiv.style.display = "flex";
+        ratingsDiv.classList.add("glass");
+        container.appendChild(ratingsDiv);
+        let ratings = document.createElement("p");
+        ratings.innerHTML = `${this.ratings["value"]} (${this.ratings["votes"]})`;
+        ratingsDiv.appendChild(ratings);
+        icon = document.createElement("span");
+        icon.classList.add("material-symbols-outlined");
+        icon.classList.add("inline-icon");
+        icon.innerHTML = "star_rate";
+        ratingsDiv.insertBefore(icon, ratings);
+
+        let genresDiv = document.createElement("div");
+        genresDiv.classList.add("glass");
+        genresDiv.style.display = "flex";
+        genresDiv.style.padding = "5%";
+        container.appendChild(genresDiv);
+        let genres = document.createElement("p");
+        let txt = "";
+        for(let g=0; g<this.genres.length; g++){
+            txt += this.genres[g] + ", ";
+        }
+        txt = txt.slice(0,-2);
+        genres.innerHTML = txt;
+        genresDiv.appendChild(genres);
+
+        return container;
     }
 
  
@@ -505,21 +576,35 @@ class Album {
   
         for(let j=0; j<releases.length; j++){
             console.log(j);
+            let relInfoDiv = document.createElement("div");
+            relInfoDiv.classList.add("versionInfo"); // again, used to delete the element
+            relInfoDiv.classList.add("glass");
+            relInfoDiv.classList.add("glass-button");
             let relInfo = document.createElement("p"); // relInfo is supposed to stand for RELeaseINFO
+            relInfo.style.width = "100%";
             relInfo.innerHTML = releases[j]["title"] + " <i>" + releases[j]["disambiguation"] + "</i>";
-            relInfo.classList.add("versionInfo"); // again, used to delete the element
             relInfo.id = `r${this.id}-${j}`;
-            releasesDiv.appendChild(relInfo);
+            releasesDiv.appendChild(relInfoDiv);
+            relInfoDiv.appendChild(relInfo);
             
-            let view = document.createElement("button");
-            view.innerHTML = "View";
-            view.onclick = () => {
+            // let view = document.createElement("button");
+            // view.innerHTML = "View";
+            // view.classList.add('viewRelease');
+            // view.onclick = () => {
+            //     showTracks(this, releases[j]["id"]); // ask for specific release, not just generic
+            // }
+            // relInfo.appendChild(view);
+            relInfoDiv.addEventListener("click", ()=> {
                 showTracks(this, releases[j]["id"]); // ask for specific release, not just generic
-            }
-            relInfo.appendChild(view);
+            })
+
 
             let loading = document.createElement("span");
-            loading.innerHTML = " Loading...";
+            // loading.innerHTML = "<u>  Loading...</u>";
+            loading.innerHTML = "autorenew";
+            loading.classList.add("material-symbols-outlined");
+            loading.classList.add("loading-animated");
+            loading.classList.add("center-button");
             loading.id = `loading-${this.id}-${j}`;
             relInfo.appendChild(loading);
 
@@ -546,23 +631,28 @@ class Album {
 
         if(test){
             let btn = document.createElement("button");
-            btn.innerHTML = "Request";
+            btn.innerHTML = "download";
+            btn.classList.add("request-button");
+            btn.classList.add("glass");
+            btn.classList.add("glass-button");
+            btn.classList.add("material-symbols-outlined")
             btn.onclick = () => {
               this.requestAlbum(j);
             }
             releasesDiv.querySelector
-            element.appendChild(btn);
+            element.parentElement.appendChild(btn);
         }
 
         // an error occured
         else{
             // none of the downloads was approved
             if(!queued[this.id] && !downloaded.includes(this.id)){
-                let no = document.createElement("span");
-                no.innerHTML = ` <u>No downloads available</u>`;
-                console.log(no);
-                console.log(`#r${this.id}-${j}`)
-                element.appendChild(no); // that was relInfo created in reloadRelease 
+                // let no = document.createElement("span");
+                // no.innerHTML = `X`;
+                // console.log(no);
+                // console.log(`#r${this.id}-${j}`)
+                // element.appendChild(no); // that was relInfo created in reloadRelease
+                element.classList.add("unavailable");
             }
 
             // the error is due to album being already queued
@@ -907,6 +997,8 @@ class Status{
         let status = document.createElement("div");
         status.innerHTML = `${Math.ceil(this.percent*1000)/10}%  (${this.status}) ${this.statusMessages[0]? " - " + this.statusMessages[0]["title"]:""} \n `;
         status.classList.add("queueElement");
+        status.classList.add("glass");
+        status.classList.add("glass-button");
         let parsedAlbum = new Album(await getAlbumFromId(this.albumId));
         await parsedAlbum.setCover();
         let albumEl = parsedAlbum.domElementQueue();
@@ -927,6 +1019,7 @@ class Status{
         let status = document.createElement("div");
         status.innerHTML = `${Math.ceil(this.percent*1000)/10}%  (${this.status}) ${this.statusMessages[0]? " - "+this.statusMessages[0]["title"]:""} \n `;
         status.classList.add("queueElement-display");
+        status.classList.add("glass");
         return status
     }
 }
