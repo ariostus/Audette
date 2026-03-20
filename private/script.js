@@ -1,25 +1,5 @@
 // MAIN LOGIC
 
-// Basic DOM elements
-// const  = document.getElementById("output");
-// const logs = document.getElementById("logs");
-// const artistSearchBar = document.getElementById("artistSearchBar");
-// const showResults = document.getElementById("showResults");
-// // const artistId = document.getElementById("artistId");
-// const albums = document.getElementById("albums");
-// const addedArtist = document.getElementById("addedArtist");
-// // const artistIdAlbums = document.getElementById("artistIdAlbums");
-// // const albumId = document.querySelector("#albumId");
-// const albumRequested = document.querySelector("#albumRequested");
-// const artistPoster = document.querySelector("#artistPoster");
-// const results = document.querySelector("#results"); // div containing search bar and search results
-// const showalbums = document.querySelector("#showalbums");
-// const libraryDiv = document.querySelector("#library");
-// const tracks = document.querySelector("#tracks");
-// const tracksOutput = document.querySelector("#tracksOutput");
-// const queueDiv = document.querySelector("#queue");
-
-
 const basicHeaders = {"accept": "application/json"};
 const postHeaders = {"accept": "application/json", "Content-Type": "application/json"};
 
@@ -543,7 +523,7 @@ async function showAlbumsCallback(response, artist){
             // let json = await response;
             console.log("ok", json.length, retry, MAXRETRY);
             console.log(json) 
-            showalbums.innerHTML = "Releases";
+            showalbums.innerHTML = artist.name;
             
             // await sleep(1000);
             for(let i=0; i<json.length; i++){    
@@ -807,12 +787,25 @@ async function showTracksCallback(response, album){
     // they spawn inside the same div, so just be sure it is empty
     if(!tracksMode){
         clearAlbums();
-        // switch2Normal();
+        switch2Normal();
         switch2Tracks();
     }
 
+    let overview = libraryDiv.querySelector("#album-overview");
+    if(overview){
+        libraryDiv.removeChild(overview);
+    }
     libraryDiv.appendChild(album.domElementInfo());
-    libraryTitle.innerHTML = album.title;
+    libraryTitle.innerHTML = `${album.title}`;
+    let artist = document.createElement("div");
+    artist.innerHTML = `${library[album.artist]["name"]}`;
+    artist.id = "artist-album-overview";
+    libraryTitle.appendChild(artist);
+    artist.addEventListener("click", async()=>{
+        switch2Normal();
+        await loadLibrary();
+        library[album.artist].showAlbums();
+    })
     // let tracksDiv = document.createElement("div");
     // tracksDiv.id = "tracksDiv";
     // main.appendChild(tracksDiv);
@@ -830,12 +823,14 @@ async function showTracksCallback(response, album){
                 space.classList.add("spacer");
                 tracksDiv.appendChild(space);
             }
-            tracksDiv.appendChild(document.createElement("hr"));
+            // tracksDiv.appendChild(document.createElement("hr"));
             let discInfo = document.createElement("p");
             discInfo.innerHTML = `DISC ${discNumber}`;
             discInfo.classList.add("trackView");
+            discInfo.classList.add("glass");
+            discInfo.style.padding = "3%";
             tracksDiv.appendChild(discInfo);
-            tracksDiv.appendChild(document.createElement("hr"));
+            // tracksDiv.appendChild(document.createElement("hr"));
             discNumber++;
         }
         

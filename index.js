@@ -1,6 +1,10 @@
 const env = require("dotenv").config();
+const path = require("path");
 const express = require('express');
-const passport = require("passport-oauth2");
+const passport = require("passport");
+const session = require("express-session");
+var LdapStrategy = require("passport-ldapauth");
+
 
 
 const apikey = process.env.API_KEY;
@@ -14,19 +18,74 @@ const imgHeaders = {"accept": "*/*"};
 const app = express();
 app.listen(8888, () => console.log("Connection open"));
 app.use(express.static("./public"));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json({limit: '1mb'}))
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave:false,
+    saveUninitialized:false
+}));
 
+passport.serializeUser((user, done)=>{
+    done(null, user);
+})
 
+passport.deserializeUser((user, done)=>{
+    done(null, user);
+})
 
 function sleep(ms){
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function checkAuth(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
 
+    res.redirect("login.html");
+}
 
+//---------------------------------------------//
+//                  LOGIN                      //
+//---------------------------------------------//
+passport.use(new LdapStrategy({
+        server: {
+            url:"ldap://localhost:3890",
+            bindDN: process.env.BIND_DN,
+            bindCredentials: process.env.BIND_CREDENTIALS,
+            searchBase: process.env.SEARCH_BASE,
+            searchFilter: process.env.SEARCH_FILTER
+        }   
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use("/private", checkAuth, express.static(path.join(__dirname, "private")));
 //***************************************************//
 //                    ROUTES                         //
 //***************************************************//
+
+// app.post("/login", function(request, response, next){
+//     console.log(request.body);
+//     passport.authenticate("ldapauth", function(err, user, info, status){
+//         console.log(info, status, "ciao")
+//         if(user){console.log(user)}
+//         if(err){console.log(err)}
+//     })(request, response, next)
+// });
+
+app.get("/", checkAuth, (request, response)=>{
+        response.sendFile(path.join(__dirname, "private", "temp.html"));
+    }
+)
+
+
+app.post("/login", passport.authenticate("ldapauth", {
+    session:true,
+    failureRedirect:"fail.html",
+    successRedirect:"/"
+}))
 
 app.get('/health', async(request, response) => {
     // console.log(request)
@@ -480,6 +539,3 @@ async function getQueue(){
 
 
 
-//---------------------------------------------//
-//                  LOGIN                      //
-//---------------------------------------------//

@@ -175,7 +175,7 @@ class Artist {
         // p.id = "loading";
         // p.innerHTML = "Loading...";
         // main.appendChild(p);
-        mainInfoDiv.innerHTML = "Loading..."
+        mainInfo.innerHTML = "Loading..."
         // innerHTML = "Loading...";
         let url = "/addartist";
         let folder = this.name.replace(" ", "");
@@ -409,6 +409,7 @@ class Album {
 
         let info = document.createElement("p");
         info.innerHTML = `${this.title} <i>(${this.albumType})</i>`;
+        info.style.marginLeft = "5%";
         preview.appendChild(info);
         
         // let view = document.createElement("button");

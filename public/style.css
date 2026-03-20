@@ -149,6 +149,11 @@ button {
 }
 
 
+.glass-button:hover {
+  background: radial-gradient(ellipse at bottom, rgba(255, 255, 255, 0.1) 0, transparent 70%);
+}
+
+
 .glass-button:active {
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(5px);
@@ -161,6 +166,10 @@ button {
     linear-gradient(235deg, var(--glass-border-active) 0, transparent 10%);
 }
 
+
+.glass-round:hover {
+  background: radial-gradient(rgba(255, 255, 255, 0.1) 0, transparent 70%);
+}
 
 .no-shadow {
   box-shadow: none;
@@ -229,7 +238,7 @@ button {
   /* border: 2px dotted white; */
 }
 
-.header-center {
+#header-center {
   width: 90%;
   /* border: 2px dotted white; */
   padding: 3%;
@@ -241,7 +250,6 @@ button {
   width: 80%;
   height: 100%;
   /* background-color: red; */
-  border-radius: 20px;
   border: 0px;
   background-color: transparent;
   font-size: 14pt;
@@ -254,8 +262,7 @@ button {
 #library-title {
   width: auto;
   margin: 0;
-  margin-bottom: 5%;
-  height: 100%;
+  height: auto;
   padding: 5%;
   z-index: 100;
   text-align: center;
@@ -266,10 +273,17 @@ button {
   position: relative;
   display: grid;
   grid-template-rows: min-content auto;
+  row-gap: 3%;
+}
+
+#libraryOuter {
+  position: relative;
+  width: auto;
+  height: auto;
 }
 
 #library {
-  height: 80%;
+  height: 94%;
   width: 90%;
   /* top: 10%; */
   /* left: 0; */
@@ -283,19 +297,35 @@ button {
   column-count: 2;
   justify-content: space-around;
   align-content: flex-start;
-  position: relative;
+  position: absolute;
+  border-radius: 50px;
 }
 
 #album-overview {
-  position: absolute;
+  position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
   padding: 5%;
+  padding-top: 0;
   width: auto;
   height: auto;
   text-align: center;
+  border-radius: 50px;
 }
 
+#artist-album-overview {
+  font-size: 12pt;
+  font-style: italic;
+  position: relative;
+  margin: 0;
+  padding-top: 5%;
+  height: min-content;
+  width: 100%;
+}
+
+#artist-album-overview:hover {
+  text-decoration: underline;
+}
 
 .inline-icon {
   position: relative;
@@ -465,6 +495,7 @@ hr {
   height: min-content;
   padding: 1%;
   margin: auto;
+  font-weight: 400;
 }
 
 
@@ -544,7 +575,7 @@ hr {
 
 
 .trackView {
-  width: 100%;
+  width: auto;
   margin: 1%;
 }
 

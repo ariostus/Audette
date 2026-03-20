@@ -16,6 +16,7 @@ const $$ = function(selector){
 const output = $("#output");
 const logs = $("#logs");
 const artistSearchBar = $("#artistSearchBar");
+const searchBarDiv = $("#header-center")
 // const showResults = $("#showResults");
 // const artistId = document.getElementById("artistId");
 const main = $("#main");
@@ -63,6 +64,9 @@ artistSearchBar.addEventListener("keyup", (e) => {
     }
 })
 
+searchBarDiv.addEventListener("click", ()=>{
+  artistSearchBar.focus();
+})
 
 audette.addEventListener("click", () => {home()});
 
@@ -84,7 +88,8 @@ function switch2Tracks(){
         home();
       }
       else{
-        await switch2Normal();
+        switch2Normal();
+        await loadLibrary();
         library[currentArtist.libId].showAlbums();
       }
       // tracksMode = 0;
@@ -148,7 +153,7 @@ async function switch2Normal(){
       libraryDiv.removeChild(albumOverview);
     }
 
-    await loadLibrary();
+    // await loadLibrary();
   
     console.log("Switched to normal");
     tracksMode = 0;
