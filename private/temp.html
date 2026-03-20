@@ -4,10 +4,13 @@
 <head>
   <title>Audette</title>
   <link rel="stylesheet" type="text/css" href="./style.css">
+  <link rel="stylesheet" type="text/css" href="./glass.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Parisienne&display=swap"
     rel="stylesheet">
+
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
@@ -22,12 +25,18 @@
 
   <div id="big-container">
     <div class="header">
-      <h2 class="header-side glass" id="audette">Audette</h2>
+      <div class="header-side glass">
+        <h2 id="audette">Audette</h2>
+      </div>
       <div class="glass" id="header-center">
+        <span class="inline-icon-search material-symbols-outlined">search</span>
         <input id="artistSearchBar" type=text class="search-bar" placeholder="Search any artist..."></input>
       </div>
       <div class="header-side glass glass-button glass-round" id="header-right">
         <button onclick="home()" class="material-symbols-outlined" style="position: absolute;">home</button>
+      </div>
+      <div class="header-side glass glass-button glass-round" id="header-right2">
+        <button onclick="settings()" class="material-symbols-outlined" style="position: absolute;">settings</button>
       </div>
     </div>
 
@@ -49,9 +58,9 @@
         <!-- <div id="tracksDiv" style="visibility: hidden"></div> -->
       </div>
     </div>
-    <div id="footer-container" class="glass">
-      <div class="footer">Footer</div>
-    </div>
+    <!-- <div id="footer-container" class="glass"> -->
+    <!-- <div class="footer">Footer</div> -->
+    <!-- </div> -->
   </div>
 </body>
 

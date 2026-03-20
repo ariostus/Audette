@@ -66,26 +66,38 @@ app.use("/private", checkAuth, express.static(path.join(__dirname, "private")));
 //                    ROUTES                         //
 //***************************************************//
 
-// app.post("/login", function(request, response, next){
-//     console.log(request.body);
-//     passport.authenticate("ldapauth", function(err, user, info, status){
-//         console.log(info, status, "ciao")
-//         if(user){console.log(user)}
-//         if(err){console.log(err)}
-//     })(request, response, next)
-// });
 
 app.get("/", checkAuth, (request, response)=>{
+    
+        response.cookie("login-error", undefined);
         response.sendFile(path.join(__dirname, "private", "temp.html"));
     }
 )
 
+app.get("/loginredirect", (request, response)=>{
+    let messages = request.session.messages;
+    request.session.messages = [];
+    if(messages){
+        response.cookie("login-error", messages[0]);
+    }
+    response.sendFile(path.join(__dirname, "public", "login.html"));
+})
+
 
 app.post("/login", passport.authenticate("ldapauth", {
     session:true,
-    failureRedirect:"fail.html",
+    failureRedirect:"/loginredirect",
+    failureMessage: true,
     successRedirect:"/"
 }))
+
+app.post('/logout', (request, response, next)=>{
+  request.logout((err)=> {
+    if (err) { return next(err); }
+    response.cookie("login-error", undefined);
+    response.redirect('/');
+  });
+});
 
 app.get('/health', async(request, response) => {
     // console.log(request)

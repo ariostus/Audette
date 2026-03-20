@@ -1,0 +1,144 @@
+:root {
+  --color1: #E37BC0;
+  --color2: #12143B;
+  --light: #F1E9E9;
+  --midtone: #7C4584;
+  --darkmid: #432C5F;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-active: rgba(0, 0, 0, 0.1);
+}
+
+
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: "Figtree", sans-serif;
+  font-size: 14pt;
+  font-weight: 300;
+  background: linear-gradient(60deg, var(--color1), var(--color2));
+  /* background-color: hsla(289, 56%, 22%, 1); */
+  /* background-image: radial-gradient(circle at 96% 10%, hsla(279, 49%, 26%, 1) 12%, transparent 53%), */
+  /* radial-gradient(circle at 36% 25%, hsla(322, 58%, 63%, 1) 12%, transparent 53%), */
+  /* radial-gradient(circle at 88% 83%, hsla(329, 86%, 86%, 1) 12%, transparent 53%), */
+  /* radial-gradient(circle at 43% 82%, hsla(191, 69%, 77%, 1) 12%, transparent 53%), */
+  /* radial-gradient(circle at 55% 72%, hsla(289, 40%, 28%, 1) 12%, transparent 53%), */
+  /* radial-gradient(circle at 44% 25%, hsla(303, 64%, 86%, 1) 12%, transparent 53%), */
+  /* radial-gradient(circle at 14% 6%, hsla(271, 74%, 17%, 1) 12%, transparent 53%); */
+  background-image: radial-gradient(circle at 39.31383163701294% 39.1458550749102%, hsla(267, 37%, 27%, 1) 10.384656300654019%, transparent 97.17243252552592%),
+    radial-gradient(circle at -10.250120770440732% -25.493490446112492%, hsla(322, 57%, 81%, 1) 0%, transparent 50%),
+    radial-gradient(circle at 25.454222026903818% 51.163035768380176%, hsla(237, 53%, 15%, 1) 5.073635381166413%, transparent 34.02422337695371%),
+    radial-gradient(circle at 51.81686177068037% 45.006404881718495%, hsla(281, 76%, 30%, 1) 4.481434146454876%, transparent 46.604240439054536%),
+    radial-gradient(circle at 64.6499519170738% -18.49658394097408%, hsla(292, 31%, 39%, 1) 4.641485365971122%, transparent 39.938103238702396%),
+    radial-gradient(circle at 20.710693316761578% 97.88731950644753%, hsla(311, 34%, 53%, 1) 4.00128048790614%, transparent 41.399913820076975%),
+    radial-gradient(circle at 67.95057422280537% 40.35158272818362%, hsla(255, 41%, 21%, 1) 25.125364826224157%, transparent 88.19089370690203%);
+
+  background-color: hsla(237, 53%, 15%, 1);
+
+}
+
+
+#main {
+
+  width: 500px;
+  height: auto;
+  position: absolute;
+  padding: 5%;
+  border-radius: 50px;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+h2 {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  font-family: "Parisienne", serif;
+  font-size: 48pt;
+  margin: 0;
+}
+
+
+form {
+  margin: auto;
+  padding: 10%;
+  width: fit-content;
+  height: fit-content;
+  box-shadow: rgba(20, 20, 60, 0.3) 0 10px 20px 2px inset;
+  border-radius: 50px;
+}
+
+#dialog {
+  text-align: center;
+  font-weight: 400;
+  margin-bottom: 5%;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  padding: 5%;
+}
+
+.input-field {
+  width: auto;
+  border: 2px solid rgba(255, 255, 255, 0.05);
+  background-color: transparent;
+  outline: none;
+  border-radius: 30px;
+  color: var(--light);
+  font: inherit;
+  padding: 2%;
+  padding-left: 5%;
+  padding-right: 5%;
+  box-shadow: rgba(20, 20, 60, 0.3) 0 10px 20px 2px inset;
+}
+
+#submit {
+  font: inherit;
+  padding: 3%;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%);
+  margin-top: 10%;
+}
+
+
+#error {
+  color: red;
+  margin-bottom: 3%;
+}
+
+.circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: linear-gradient(var(--color1), var(--color2));
+  position: absolute;
+  z-index: 0;
+}
+
+#circle1 {
+  left: 60%;
+  top: 20%;
+  transform: rotate(-30deg);
+}
+
+#circle2 {
+  left: 32%;
+  top: 40%;
+  transform: rotate(30deg);
+  transform: scale(1.1);
+}
+
+#circle3 {
+  left: 25%;
+  top: 60%;
+  transform: rotate(60deg);
+
+}

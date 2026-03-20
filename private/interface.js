@@ -41,6 +41,8 @@ const mainInfoDiv = $("#main-info-div");
 const showalbums = mainInfo;
 const showResults = mainInfo;
 const audette = $("#audette");
+const headerRight = $("#header-right");
+const headerRight2 = $("#header-right2");
 
 // used to get back from tracks view
 var currentArtist = 0;
@@ -68,7 +70,15 @@ searchBarDiv.addEventListener("click", ()=>{
   artistSearchBar.focus();
 })
 
-audette.addEventListener("click", () => {home()});
+// audette.addEventListener("click", () => {home()});
+
+headerRight.addEventListener("click", ()=>{
+  home();
+})
+
+headerRight2.addEventListener("click", ()=>{
+  settings();
+})
 
 var tracksMode = 0; // 0 for normal, 1 for tracks
 
@@ -196,6 +206,67 @@ function home(){
 
     tracksMode = 0;
 
+}
+
+function settings(){
+  
+    let children = main.children;
+    while(children.length > 1){
+      main.removeChild(children[children.length - 1]);
+    }
+
+    clearLibrary();
+    libraryTitle.innerHTML = "Info";
+    
+    mainInfo.innerHTML = "Settings";
+
+    children = mainInfoDiv.children;
+    while(children.length > 1){
+      mainInfoDiv.removeChild(children[children.length - 1]);
+    }
+
+    let settingsDiv = document.createElement("div");
+    settingsDiv.id = "settings";
+    main.appendChild(settingsDiv);
+
+    // LOGOUT FORM
+    let form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/logout";
+    form.style.display = "flex";
+    let submit = document.createElement("button");
+    submit.onclick = form.submit();
+    submit.innerHTML = "Logout";
+    submit.classList.add("glass");
+    submit.classList.add("glass-button");
+    submit.classList.add("submit");
+
+    let icon = document.createElement("span");
+    icon.classList.add("material-symbols-outlined");
+    icon.classList.add("inline-icon");
+    icon.innerHTML = "logout";
+    settingsDiv.appendChild(icon);
+    
+    form.appendChild(submit);
+    settingsDiv.appendChild(form);
+
+
+    // BUGREPORT
+    let report = document.createElement("button");
+    report.innerHTML = "Report a bug";
+    report.classList.add("glass");
+    report.classList.add("glass-button");
+    report.style.position = "relative";
+
+    icon = document.createElement("span");
+    icon.classList.add("material-symbols-outlined");
+    icon.classList.add("inline-icon");
+    icon.innerHTML = "bug_report";
+    settingsDiv.appendChild(icon);
+    
+    settingsDiv.appendChild(report);
+  
+    tracksMode = 0;
 }
 
 
