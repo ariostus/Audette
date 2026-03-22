@@ -1,0 +1,10 @@
+LIDARR_API_KEY=""
+
+# ldap-specific stuff - no quotation marks!
+AUDETTE_LDAP_BIND_DN=uid=user,ou=people,dc=example,dc=com
+AUDETTE_LDAP_BIND_CREDENTIALS=secret
+AUDETTE_LDAP_SEARCH_BASE=ou=people,dc=example,dc=com
+AUDETTE_LDAP_SEARCH_FILTER=(uid={{username}}) #leave it like this
+ 
+# used to set cookies, should be a 32-64 char string
+AUDETTE_SESSION_SECRET=""

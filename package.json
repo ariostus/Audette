@@ -1,6 +1,6 @@
 {
   "name": "audette",
-  "version": "0.1.1",
+  "version": "0.9.3",
   "description": "Client for Lidarr",
   "license": "GPL-3.0-or-later",
   "author": "ariostus",
@@ -9,7 +9,6 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
-    "html": "^1.0.0",
     "passport": "^0.7.0",
     "passport-ldapauth": "^3.0.1"
   }
