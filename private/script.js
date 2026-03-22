@@ -5,7 +5,6 @@ const postHeaders = {"accept": "application/json", "Content-Type": "application/
 
 
 
-
 // async function neededForNow(id){
 //     let url = lidarr +"album/" + id + auth;
 //     let myDict = {
@@ -253,7 +252,7 @@ async function loadLibraryCallback(response){
         library[artist.libId] = artist;
         artist.poster = returnPoster(artist.libId);
         if(!artist.images.length){
-            artist.poster = "../public/assets/unknown.png";
+            artist.poster = "assets/unknown.png";
         }
         // console.log(artist.libraryView());
         

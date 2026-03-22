@@ -229,7 +229,7 @@ function settings(){
     if(!$("#global-info")){
       let info = document.createElement("div");
       info.id = "global-info";
-      const ps = ["Version: 0.8.4", "License: GPL-3", "Last update: March 21, 2026"];
+      const ps = config.application_info;
       libraryDiv.appendChild(info);
 
       let p;
@@ -277,10 +277,17 @@ function settings(){
 
     // BUGREPORT
     let report = document.createElement("button");
-    report.innerHTML = "Report a bug";
+    // report.innerHTML = "Report a bug";
     report.classList.add("glass");
     report.classList.add("glass-button");
     report.style.position = "relative";
+    let mail = document.createElement("a");
+    mail.href = `mailto:${config.bug_report_email}`;
+    mail.innerHTML = "Report a bug";
+    mail.classList.add("a-plain");
+    mail.style.width = "100%";
+    mail.style.display = "block";
+    report.appendChild(mail);
 
     icon = document.createElement("span");
     icon.classList.add("material-symbols-outlined");

@@ -18,6 +18,7 @@
 </head>
 
 <body>
+  <div id="background"></div>
   <div id="circle1" class="circle"></div>
   <!-- <div class="gradient-box"></div> -->
   <div id="circle2" class="circle"></div>
@@ -62,9 +63,17 @@
     <!-- <div class="footer">Footer</div> -->
     <!-- </div> -->
   </div>
+  <svg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'>
+    <filter id='noiseFilter'>
+      <feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch' />
+    </filter>
+
+    <rect width='100%' height='100%' filter='url(#noiseFilter)' />
+  </svg>
+
 </body>
 
-
+<script src="/private/config.js"></script>
 <script src="/private/interface.js"></script>
 <script src="/private/tools.js"></script>
 <script src="/private/classes.js"></script>

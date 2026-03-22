@@ -1,14 +1,14 @@
 const env = require("dotenv").config();
-const config = require("./private/config.js");
 const path = require("path");
 const express = require('express');
 const passport = require("passport");
 const session = require("express-session");
+const config = require("./private/config.js");
 var LdapStrategy = require("passport-ldapauth");
 
 
 
-const apikey = process.env.API_KEY;
+const apikey = process.env.LIDARR_API_KEY;
 const auth =  "?apikey="  + apikey;
 const lidarr = config.lidarr_address;
 const basicHeaders = {"accept": "application/json"};

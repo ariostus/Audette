@@ -1,12 +1,24 @@
 /********************************* new gen ***********************************/
 :root {
-  --color1: #E37BC0;
-  --color2: #12143B;
-  --light: #F1E9E9;
-  --midtone: #7C4584;
-  --darkmid: #432C5F;
+  /* --color1: #E37BC0; */
+  /* --color2: #12143B; */
+  /* --light: #F1E9E9; */
+  /* --midtone: #7C4584; */
+  /* --darkmid: #432C5F; */
+  --color1: #968fd3;
+  --color2: #041d21;
+  --light: #ede9ed;
+  --midtone: #47557c;
+  --darkmid: #20384b;
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-border-active: rgba(0, 0, 0, 0.1);
+  --color1-t: #968fd366;
+  --color2-t: #041d2166;
+  --light-t: #ede9ed66;
+  --midtone-t: #47557c66;
+  --darkmid-t: #20384b66;
+
+
 }
 
 
@@ -17,6 +29,18 @@ html {
   /* overflow-y: hidden; */
 }
 
+
+
+.noise {
+  --_noise-texture: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'><defs><filter id='n' x='0' y='0' width='100%' height='100%' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.3' numOctaves='3' stitchTiles='stitch' result='t'/><feColorMatrix type='saturate' values='0' in='t' result='g'/><feComponentTransfer in='g' result='a'><feFuncA type='linear' slope='0.5'/></feComponentTransfer></filter></defs><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --_noise-size: 20.4%;
+  background-image: var(--_noise-texture);
+  background-size: var(--_noise-size);
+  background-position: center;
+  background-repeat: repeat;
+}
+
+
 body {
   height: 100%;
   overflow: hidden;
@@ -25,8 +49,9 @@ body {
   color: var(--light);
   /* font-size: 14pt; */
   font-weight: 300;
+  margin: 0;
   /* background: linear-gradient(60deg, var(--color1), var(--color2)); */
-  /* background-color: hsla(289, 56%, 22%, 1); */
+  background-color: hsla(289, 56%, 22%, 1);
   /* background-image: radial-gradient(circle at 96% 10%, hsla(279, 49%, 26%, 1) 12%, transparent 53%), */
   /* radial-gradient(circle at 36% 25%, hsla(322, 58%, 63%, 1) 12%, transparent 53%), */
   /* radial-gradient(circle at 88% 83%, hsla(329, 86%, 86%, 1) 12%, transparent 53%), */
@@ -34,19 +59,40 @@ body {
   /* radial-gradient(circle at 55% 72%, hsla(289, 40%, 28%, 1) 12%, transparent 53%), */
   /* radial-gradient(circle at 44% 25%, hsla(303, 64%, 86%, 1) 12%, transparent 53%), */
   /* radial-gradient(circle at 14% 6%, hsla(271, 74%, 17%, 1) 12%, transparent 53%); */
-  background-image: radial-gradient(circle at 39.31383163701294% 39.1458550749102%, hsla(267, 37%, 27%, 1) 10.384656300654019%, transparent 97.17243252552592%),
-    radial-gradient(circle at -10.250120770440732% -25.493490446112492%, hsla(322, 57%, 81%, 1) 0%, transparent 50%),
-    radial-gradient(circle at 25.454222026903818% 51.163035768380176%, hsla(237, 53%, 15%, 1) 5.073635381166413%, transparent 34.02422337695371%),
-    radial-gradient(circle at 51.81686177068037% 45.006404881718495%, hsla(281, 76%, 30%, 1) 4.481434146454876%, transparent 46.604240439054536%),
-    radial-gradient(circle at 64.6499519170738% -18.49658394097408%, hsla(292, 31%, 39%, 1) 4.641485365971122%, transparent 39.938103238702396%),
-    radial-gradient(circle at 20.710693316761578% 97.88731950644753%, hsla(311, 34%, 53%, 1) 4.00128048790614%, transparent 41.399913820076975%),
-    radial-gradient(circle at 67.95057422280537% 40.35158272818362%, hsla(255, 41%, 21%, 1) 25.125364826224157%, transparent 88.19089370690203%);
-
-  background-color: hsla(237, 53%, 15%, 1);
-  margin: 0;
-
+  /* background-image: radial-gradient(circle at 39.31383163701294% 39.1458550749102%, hsla(267, 37%, 27%, 1) 10.384656300654019%, transparent 97.17243252552592%), */
+  /* radial-gradient(circle at -10.250120770440732% -25.493490446112492%, hsla(322, 57%, 81%, 1) 0%, transparent 50%), */
+  /* radial-gradient(circle at 25.454222026903818% 51.163035768380176%, hsla(237, 53%, 15%, 1) 5.073635381166413%, transparent 34.02422337695371%), */
+  /* radial-gradient(circle at 51.81686177068037% 45.006404881718495%, hsla(281, 76%, 30%, 1) 4.481434146454876%, transparent 46.604240439054536%), */
+  /* radial-gradient(circle at 64.6499519170738% -18.49658394097408%, hsla(292, 31%, 39%, 1) 4.641485365971122%, transparent 39.938103238702396%), */
+  /* radial-gradient(circle at 20.710693316761578% 97.88731950644753%, hsla(311, 34%, 53%, 1) 4.00128048790614%, transparent 41.399913820076975%), */
+  /* radial-gradient(circle at 67.95057422280537% 40.35158272818362%, hsla(255, 41%, 21%, 1) 25.125364826224157%, transparent 88.19089370690203%); */
 }
 
+#background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  /* --_gradient-blend-mode: normal; */
+  /* --_gradient-blur: 0px; */
+  /* --_gradient: radial-gradient(at 53.5% 20.1%, #432c5f 0px, transparent 50%), radial-gradient(at 61.3% 57.6%, #7c4584 0px, transparent 50%), radial-gradient(at 8.6% 70.9%, #e37bc0 0px, transparent 50%), radial-gradient(at 97.4% 2.6%, #f1e9e9 0px, transparent 50%); */
+
+  /* background: var(--_gradient) #12143b; */
+  /* mix-blend-mode: var(--_gradient-blend-mode); */
+  background-color: var(--color2);
+  /* filter: brightness(60%) saturate(200%); */
+
+  background:
+    radial-gradient(circle at 0% -10%, var(--color1-t), transparent 20%),
+    radial-gradient(circle at bottom right, var(--light-t), transparent 30%),
+    radial-gradient(circle at 0% 50%, var(--midtone), transparent 50%),
+    radial-gradient(circle at 80% 0%, var(--darkmid), transparent 50%),
+    url("#noiseFilter"),
+    var(--color2);
+
+  filter: hue-rotate(20deg);
+
+}
 
 button {
   background-color: transparent;
@@ -63,7 +109,19 @@ button {
 
 
 
+.a-plain {
+  font: inherit;
+  color: inherit;
+  text-decoration: none;
+}
 
+.a-plain:active {
+  color: var(--color1);
+}
+
+.a-plain:visited {
+  color: var(--color1);
+}
 
 
 
@@ -71,28 +129,49 @@ button {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background: linear-gradient(var(--color1), var(--color2));
+  background: linear-gradient(var(--midtone), var(--color2));
   position: absolute;
   z-index: 0;
+
+  animation-name: orbit;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+
+  filter: hue-rotate(20deg);
+}
+
+
+@keyframes orbit {
+
+  to {
+    transform: rotate(100deg) translate(5%, 10%);
+  }
+
 }
 
 #circle1 {
   left: 60%;
   top: 20%;
-  transform: rotate(-30deg);
+  transform: rotate(-30deg) scale(0.8);
+  animation-delay: 2s;
+  animation-direction: alternate;
 }
 
 #circle2 {
-  left: 32%;
+  left: 34%;
   top: 40%;
-  transform: rotate(30deg);
   transform: scale(1.1);
+  animation-delay: 1s;
+  animation-direction: alternate-reverse;
+  animation-fill-mode: backwards;
 }
 
 #circle3 {
   left: 25%;
   top: 60%;
-  transform: rotate(60deg);
+  transform: rotate(60deg) scale(1.3);
+  animation-direction: alternate;
 
 }
 
@@ -247,6 +326,16 @@ button {
   /* border: 2px dotted white; */
 }
 
+#header-right2:hover {
+  animation: wobble;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+
+
+
 #audette {
   text-align: center;
   font-family: "Parisienne", serif;
@@ -255,12 +344,23 @@ button {
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 100%;
   transform: translate(-50%, -50%);
   /* color: var(--color1); */
   color: transparent;
-  background: linear-gradient(to bottom, var(--color1) 40%, var(--light));
+  background: linear-gradient(to top left, var(--color1) 40%, var(--light));
   background-clip: text;
-  width: 100%;
+}
+
+
+
+
+
+
+@keyframes wobble {
+  to {
+    transform: rotate(180deg);
+  }
 }
 
 #header-center {
@@ -382,13 +482,12 @@ button {
   /* background-color: rgba(255, 255, 255, 0.2); */
   text-align: left;
   /* font-family: 'Courier New', Courier, monospace; */
-  height: auto;
+  height: fit-content;
   /* border: 1px dotted white; */
   border-radius: 25%;
   padding: 5%;
   margin-top: 5%;
   width: 35%;
-  overflow: hidden;
   display: grid;
   grid-template-rows: auto auto;
 }
@@ -588,8 +687,6 @@ hr {
   height: fit-content;
   width: 100%;
   padding: 5% 10% 5% 10%;
-  overflow-y: hidden;
-  overflow-x: hidden;
   display: grid;
   grid-template-columns: 30% auto;
   gap: 10%;

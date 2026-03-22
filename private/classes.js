@@ -1,7 +1,6 @@
 // Useful classes to display search results, artists, albums and so on
 // (In a different file cause I like it like that)
 
-const config = require("./config.js");
 //**************************************************************//
 //********************** ARTIST *********************************//
 //**************************************************************//
@@ -37,7 +36,7 @@ class Artist {
         let images = this.images;
         console.log("images", images)
         if(!images.length){
-            return "unknown.png" // it's a static-served image 
+            return "assets/unknown.png" // it's a static-served image 
         }
 
         else{
@@ -56,6 +55,7 @@ class Artist {
         result.id = this.id;
         result.classList.add("artistPreview");
         result.classList.add("glass");
+        result.classList.add("glass-button");
 
 
         let img = document.createElement("img");
@@ -130,6 +130,7 @@ class Artist {
         result.classList.add("artistPreviewFromLibrary");
         result.classList.add("artistPreview");
         result.classList.add("glass");
+        result.classList.add("glass-button");
 
         let img = document.createElement("img");
         img.src = this.poster; // this was set by loadLibrary on first load
@@ -232,6 +233,7 @@ class Artist {
         let img = this.libraryDom.querySelector(".artistLibraryPoster"); 
         // let url = img.src;
         let url = this.poster;
+        img.src = "assets/unknown.png";
         let request = new Request(url, {
             method: "GET",
             headers: {
@@ -672,6 +674,8 @@ class Album {
         let img = this.dom.querySelector(".albumPreviewPoster"); 
         // let url = img.src;
         let url = this.cover;
+        img.src = "assets/album-nocover.png";
+        this.cover = "assets/album-nocover.png";
         let request = new Request(url, {
             method: "GET",
             headers: {
@@ -689,8 +693,15 @@ class Album {
             response = await fetch(request);
             console.log("retrying...")
         }
-        // finally reload image: changing src fooling the cache
-        img.setAttribute("src", url + "#" + new Date().getTime());
+        if(response.ok){
+            // finally reload image: changing src fooling the cache
+            img.setAttribute("src", url + "#" + new Date().getTime());
+            this.cover = url;
+        }
+        else {
+            img.src = "assets/album-nocover.png";
+            this.cover = "assets/album-nocover.png";
+        }
     }
 
 
