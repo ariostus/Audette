@@ -1,20 +1,21 @@
 /********************************* new gen ***********************************/
 :root {
-  /* --color1: #E37BC0; */
+  --pink: #E37BC0;
   /* --color2: #12143B; */
   /* --light: #F1E9E9; */
-  /* --midtone: #7C4584; */
+  --purple: #7C4584;
   /* --darkmid: #432C5F; */
   --color1: #968fd3;
   --color2: #041d21;
-  --light: #ede9ed;
+  /* --light: #ede9ed; */
+  --light: #d4e9f0;
   --midtone: #47557c;
   --darkmid: #20384b;
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-border-active: rgba(0, 0, 0, 0.1);
   --color1-t: #968fd366;
   --color2-t: #041d2166;
-  --light-t: #ede9ed66;
+  --light-t: #d4e9f066;
   --midtone-t: #47557c66;
   --darkmid-t: #20384b66;
 
@@ -84,13 +85,13 @@ body {
 
   background:
     radial-gradient(circle at 0% -10%, var(--color1-t), transparent 20%),
-    radial-gradient(circle at bottom right, var(--light-t), transparent 30%),
+    radial-gradient(circle at bottom right, var(--color1-t), transparent 30%),
     radial-gradient(circle at 0% 50%, var(--midtone), transparent 50%),
     radial-gradient(circle at 80% 0%, var(--darkmid), transparent 50%),
     url("#noiseFilter"),
     var(--color2);
 
-  filter: hue-rotate(20deg);
+  /* filter: hue-rotate(20deg); */
 
 }
 
@@ -138,7 +139,7 @@ button {
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
 
-  filter: hue-rotate(20deg);
+  /* filter: hue-rotate(20deg); */
 }
 
 
@@ -348,18 +349,22 @@ button {
   transform: translate(-50%, -50%);
   /* color: var(--color1); */
   color: transparent;
-  background: linear-gradient(to top left, var(--color1) 40%, var(--light));
+  background: linear-gradient(to top left, var(--pink), var(--color1), var(--light));
   background-clip: text;
+  background-size: 150% 150%;
+  animation: wobble 3s infinite linear alternate;
 }
 
 
 
 
-
-
 @keyframes wobble {
+  from {
+    background-position: 0% 0%;
+  }
+
   to {
-    transform: rotate(180deg);
+    background-position: 100% 100%;
   }
 }
 

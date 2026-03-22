@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "description": "Client for Lidarr",
   "license": "GPL-3.0-or-later",
-  "author": "LudoSir",
+  "author": "ariostus",
   "main": "index.js",
   "dependencies": {
     "dotenv": "^17.2.3",

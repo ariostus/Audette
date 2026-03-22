@@ -327,10 +327,9 @@ async function artistLookupCallback(response){
     let json = await response.json();
     console.log(json)
     if (response.ok){
-        showResults.innerHTML = "Results:";
         switch2Normal();
-
-        // show new results
+        await loadLibrary();
+        showResults.innerHTML = "Results:";
         for(let j=0; j<json.length; j++){
             // condition checks if artist is already in library - in that case "added" is an actual date/time value        
             if(json[j]["added"] == "0001-01-01T00:00:00Z"){
