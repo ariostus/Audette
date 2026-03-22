@@ -1,9 +1,4 @@
 // UI/UX
-
-const $$$ = function(element, selector){
-  return element.querySelector(selector)
-};
-
 const $ = function(selector){
   return document.querySelector(selector);
 }
@@ -11,6 +6,11 @@ const $ = function(selector){
 const $$ = function(selector){
   return document.querySelectorAll(selector);
 }
+
+const $$$ = function(element, selector){
+  return element.querySelector(selector)
+};
+
 
 // DOM elements
 const output = $("#output");
@@ -48,16 +48,11 @@ const headerRight2 = $("#header-right2");
 var currentArtist = 0;
 
 // integrates healthCallback
-function completeFailure(){
-  // window.location.replace("./fail.html");
+function completeFailure(data){
+  window.location.replace("fail.html");
+  console.log(data);
   return 0
 }
-
-
-function healthUI(){
-  
-}
-
 
 
 artistSearchBar.addEventListener("keyup", (e) => {
@@ -124,10 +119,6 @@ function switch2Tracks(){
     // libraryTitle.innerHTML = "Overview";
     clearLibrary();
 
-
-
-
-    
     tracksMode = 1;
 }
 
@@ -163,6 +154,14 @@ async function switch2Normal(){
       libraryDiv.removeChild(albumOverview);
     }
 
+    if($("#settings")){
+      main.removeChild($("#settings"));
+      loadLibrary();
+    }
+    if($("#global-info")){
+      libraryDiv.removeChild($("#global-info"));
+    }
+
     // await loadLibrary();
   
     console.log("Switched to normal");
@@ -178,6 +177,10 @@ function home(){
       main.removeChild(children[children.length - 1]);
     }
 
+
+    if($("#global-info")){
+      libraryDiv.removeChild($("#global-info"));
+    }
     
     mainInfo.innerHTML = "Home";
 
@@ -185,10 +188,12 @@ function home(){
     while(children.length > 1){
       mainInfoDiv.removeChild(children[children.length - 1]);
     }  
-  
-    queueDiv = document.createElement("div");
-    queueDiv.id = "queue";
-    main.appendChild(queueDiv);
+
+    if(!$("#queue")){
+      queueDiv = document.createElement("div");
+      queueDiv.id = "queue";
+      main.appendChild(queueDiv);
+    }
     getQueue();
 
     let title = document.createElement("h3");
@@ -216,7 +221,26 @@ function settings(){
     }
 
     clearLibrary();
+    if($("#album-overview")){
+      libraryDiv.removeChild($("#album-overview"));
+    }
     libraryTitle.innerHTML = "Info";
+
+    if(!$("#global-info")){
+      let info = document.createElement("div");
+      info.id = "global-info";
+      const ps = ["Version: 0.8.4", "License: GPL-3", "Last update: March 21, 2026"];
+      libraryDiv.appendChild(info);
+
+      let p;
+      for(let i=0; i<ps.length; i++){
+        p = document.createElement("p");
+        p.innerHTML = ps[i];
+        info.appendChild(p);
+      }
+    }
+
+
     
     mainInfo.innerHTML = "Settings";
 
@@ -265,32 +289,26 @@ function settings(){
     settingsDiv.appendChild(icon);
     
     settingsDiv.appendChild(report);
+
+
+    
+    // SWITCH THEME
+    // let theme = document.createElement("button");
+    // theme.innerHTML = "Switch theme";
+    // theme.classList.add("glass");
+    // theme.classList.add("glass-button");
+    // theme.style.position = "relative";
+
+    // icon = document.createElement("span");
+    // icon.classList.add("material-symbols-outlined");
+    // icon.classList.add("inline-icon");
+    // icon.innerHTML = "routine";
+    // settingsDiv.appendChild(icon);
+  
+    // settingsDiv.appendChild(theme);
   
     tracksMode = 0;
 }
-
-
-
-// function switch2NormalFromAlbum(){
-//     main.classList.remove("main-tracks-view");
-//     main.classList.add("main");
-
-
-//     // mainInfo.style.width = "100%";
-//     // clearTracks();
-//     // library[currentArtist].showAlbums();
-//     if(tracksDiv != main){
-//       main.removeChild(tracksDiv);
-//     }
-
-//     if(releasesDiv != main){
-//       main.removeChild(releasesDiv);
-//     }
-
-//     tracksDiv = main;
-//     releasesDiv = main;
-  
-// }
 
 
 function requestSuccess(album){

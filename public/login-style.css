@@ -99,7 +99,7 @@ form {
   box-shadow: rgba(20, 20, 60, 0.3) 0 10px 20px 2px inset;
 }
 
-#submit {
+#submit-btn {
   font: inherit;
   padding: 3%;
   position: relative;

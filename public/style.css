@@ -250,13 +250,17 @@ button {
 #audette {
   text-align: center;
   font-family: "Parisienne", serif;
-  font-size: 28pt;
+  font-size: 32pt;
   margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: var(--color1);
+  /* color: var(--color1); */
+  color: transparent;
+  background: linear-gradient(to bottom, var(--color1) 40%, var(--light));
+  background-clip: text;
+  width: 100%;
 }
 
 #header-center {
@@ -335,7 +339,7 @@ button {
   overflow-y: scroll;
   overflow-x: hidden;
   padding: 5%;
-  padding-top: 0;
+  padding-top: 5%;
   width: auto;
   height: auto;
   text-align: center;
@@ -611,7 +615,7 @@ hr {
 
 #queue {
   width: 100%;
-  height: 15%;
+  height: auto;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -714,9 +718,17 @@ hr {
 #settings {
   display: grid;
   grid-template-columns: 10% auto;
-  grid-template-rows: 28pt 28pt 28pt;
-  row-gap: 10%;
+  grid-template-rows: 28pt 28pt;
+  row-gap: 14pt;
   width: 60%;
   margin: auto;
-  height: 80%;
+  height: auto;
+  flex-direction: row;
+  position: relative;
+}
+
+#global-info {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
 }

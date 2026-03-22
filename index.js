@@ -1,4 +1,5 @@
 const env = require("dotenv").config();
+const config = require("./private/config.js");
 const path = require("path");
 const express = require('express');
 const passport = require("passport");
@@ -9,19 +10,19 @@ var LdapStrategy = require("passport-ldapauth");
 
 const apikey = process.env.API_KEY;
 const auth =  "?apikey="  + apikey;
-const lidarr = "http://127.0.0.1:8686/api/v1/";
+const lidarr = config.lidarr_address;
 const basicHeaders = {"accept": "application/json"};
 const postHeaders = {"accept": "application/json", "Content-Type": "application/json"};
 const imgHeaders = {"accept": "*/*"};
 
 
 const app = express();
-app.listen(8888, () => console.log("Connection open"));
+app.listen(config.port, () => console.log("Connection open"));
 app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({limit: '1mb'}))
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.AUDETTE_SESSION_SECRET,
     resave:false,
     saveUninitialized:false
 }));
@@ -51,11 +52,11 @@ function checkAuth(req, res, next){
 //---------------------------------------------//
 passport.use(new LdapStrategy({
         server: {
-            url:"ldap://localhost:3890",
-            bindDN: process.env.BIND_DN,
-            bindCredentials: process.env.BIND_CREDENTIALS,
-            searchBase: process.env.SEARCH_BASE,
-            searchFilter: process.env.SEARCH_FILTER
+            url:config.ldap_address,
+            bindDN: process.env.AUDETTE_LDAP_BIND_DN,
+            bindCredentials: process.env.AUDETTE_LDAP_BIND_CREDENTIALS,
+            searchBase: process.env.AUDETTE_LDAP_SEARCH_BASE,
+            searchFilter: process.env.AUDETTE_LDAP_SEARCH_FILTER
         }   
 }))
 
@@ -68,28 +69,35 @@ app.use("/private", checkAuth, express.static(path.join(__dirname, "private")));
 
 
 app.get("/", checkAuth, (request, response)=>{
-    
         response.cookie("login-error", undefined);
         response.sendFile(path.join(__dirname, "private", "temp.html"));
     }
 )
 
 app.get("/loginredirect", (request, response)=>{
-    let messages = request.session.messages;
-    request.session.messages = [];
-    if(messages){
-        response.cookie("login-error", messages[0]);
-    }
     response.sendFile(path.join(__dirname, "public", "login.html"));
 })
 
 
-app.post("/login", passport.authenticate("ldapauth", {
-    session:true,
-    failureRedirect:"/loginredirect",
-    failureMessage: true,
-    successRedirect:"/"
-}))
+app.post("/login", (request, response, next) => {
+    response.cookie("login-error", undefined);
+    passport.authenticate("ldapauth", {session: true, failureMessage: true},
+        (err, user, info) => {
+            if(err){return response.sendFile(path.join(__dirname, "public", "fail.html"))};
+            if(!user){
+                let errorMessage = info?info.message:"Login failed";
+                response.cookie("login-error", errorMessage);
+                return response.redirect("/loginredirect")
+            };
+            request.logIn(user, (loginErr)=>{
+                if(loginErr){return next(loginErr)};
+                return response.redirect("/");
+            }
+        );
+        }
+    )(request, response, next)}
+)
+
 
 app.post('/logout', (request, response, next)=>{
   request.logout((err)=> {

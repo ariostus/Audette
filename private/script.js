@@ -97,7 +97,7 @@ async function healthCallback(response){
         }
     else {
         console.log("Service temporarily unavailable. Please try again in a few minutes or contact support.");
-        completeFailure();
+        completeFailure(data);
     } // this means request completely failed, so api is down
 }
 
@@ -143,7 +143,7 @@ async function getMetaProfiles(){
 async function setMetaProfile(response){
     let json = await response.json();
     let i = 0;
-    while(json[i]["name"] != "Extended"){
+    while(json[i]["name"] != config.metadata_profile_name){
         i++
     }
 
@@ -166,7 +166,7 @@ async function getQualityProfiles(){
 async function setQualityProfile(response){
     let json = await response.json();
     let i = 0;
-    while(json[i]["name"] != "MidQuality"){
+    while(json[i]["name"] != config.quality_profile_name){
         i++
     }
 
@@ -253,7 +253,7 @@ async function loadLibraryCallback(response){
         library[artist.libId] = artist;
         artist.poster = returnPoster(artist.libId);
         if(!artist.images.length){
-            artist.poster = "unknown.png";
+            artist.poster = "../public/assets/unknown.png";
         }
         // console.log(artist.libraryView());
         
@@ -500,7 +500,7 @@ async function addArtistCallback(response){
 // }
 
 var retry = 0;
-const MAXRETRY = 10;
+const MAXRETRY = config.max_retries;
 
 async function showAlbumsCallback(response, artist){
     let json = await response.json();
@@ -509,7 +509,7 @@ async function showAlbumsCallback(response, artist){
     // the response is empty. So just try to get info a few more times, before giving up
     if(json.length == 0 && retry < MAXRETRY){
         // console.log("retry", retry);
-        await sleep(1000);
+        await sleep(config.sleep_between_retries);
         artist.showAlbums(); // fetch again
         retry++;
         return 0 // on successfull request, the remaing part of the function will be executed
@@ -734,7 +734,7 @@ async function requestAlbumCallback(response){
         info.innerHTML = text;
         
         while(!queued[parsed[""]]){
-            await sleep(500);
+            await sleep(config.sleep_between_retries);
             await getQueue(1);
         }
         
@@ -957,14 +957,12 @@ async function manageQueue(response){
     console.log(records);
 
 
-    if($$$(main, "#queue")){
-        clearQueue();
-    }
+    clearQueue();
 
     for(let r=0; r<records.length; r++){
         let status = new Status(records[r]);
         queued[`${status.albumId}`] = status; 
-        if($$$(main, "#queue")){
+        if($("#queue")){
             let display = await status.domElementStandAlone();
             queueDiv.appendChild(display);
         }     
@@ -974,29 +972,8 @@ async function manageQueue(response){
 getQueue();
 setInterval(
     () => {getQueue()},
-    1000000
+    config.queue_refresh_rate
 );
 
-// setInterval(
-//     () => {manageQueue(queueResponse)},
-//     1000
-// )
 
 
-async function test(text){
-    let data = {"bodyText": text};
-    let url = '/postman';
-
-    let request = new Request(url, {
-        method:"POST",
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-
-    fetch(request).then(
-        (response) => console.log(response.json())
-    );
-
-}

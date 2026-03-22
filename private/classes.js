@@ -1,10 +1,7 @@
 // Useful classes to display search results, artists, albums and so on
 // (In a different file cause I like it like that)
 
-
-// const albumRequested = document.querySelector("#albumRequested");
-
-
+const config = require("./config.js");
 //**************************************************************//
 //********************** ARTIST *********************************//
 //**************************************************************//
@@ -144,16 +141,17 @@ class Artist {
             () => this.showAlbums()
         )
 
+
+
+        let text = document.createElement("div");
+        result.appendChild(text);
+
         // ... sometimes may be good, sometimes may be shit
         if(this.overview){
             let info = document.createElement("p");
             info.innerHTML = this.overview;
             text.appendChild(info)
         }
-
-
-        let text = document.createElement("div");
-        result.appendChild(text);
         
         let title = document.createElement("h3");
         title.innerHTML = this.name;
@@ -178,7 +176,7 @@ class Artist {
         mainInfo.innerHTML = "Loading..."
         // innerHTML = "Loading...";
         let url = "/addartist";
-        let folder = this.name.replace(" ", "");
+        let folder = this.name.replace(" ", "_"); // just a choice of mine, could be anything
         let dictBody = {
                 "artistName": this.name, 
                 "foreignArtistId": this.id,
@@ -247,12 +245,12 @@ class Artist {
         let retries = 0; // now wait for a 200 response - retrying once a sec
         while(!response.ok && retries < MAXRETRY){
             retries++;
-            await sleep(10000);
+            await sleep(config.sleep_between_retries*5); // artist's poster is the last one that lidarr loads
             response = await fetch(request);
-            console.log("retyring...")
+            console.log("retrying...")
         }
         if(retries >= MAXRETRY){
-            url = "unknown.png"
+            url = "../public/assets/unknown.png"
         }
         // finally reload image: changing src fooling the cache
         img.setAttribute("src", url + "#" + new Date().getTime());
@@ -543,7 +541,7 @@ class Album {
         // there might be a delay, as Lidarr itself needs to download metadata
         // so just keep querying until it returns something
         while(releases.length < 1){
-            await sleep(1000);
+            await sleep(config.sleep_between_retries);
             console.log("Fucking nothing")
             response = await fetch(request);
             releases = (await response.json())["releases"];
@@ -636,7 +634,8 @@ class Album {
             btn.classList.add("request-button");
             btn.classList.add("glass");
             btn.classList.add("glass-button");
-            btn.classList.add("material-symbols-outlined")
+            btn.classList.add("material-symbols-outlined");
+            btn.classList.add("glass-round");
             btn.onclick = () => {
               this.requestAlbum(j);
             }
@@ -686,7 +685,7 @@ class Album {
         let retries = 0; // now wait for a 200 response - retrying once a sec
         while(!response.ok && retries < MAXRETRY){
             retries++;
-            await sleep(3000);
+            await sleep(config.sleep_between_retries*2);
             response = await fetch(request);
             console.log("retrying...")
         }
@@ -815,7 +814,7 @@ class Album {
         // find a torrent for the specified album (and relative release);
         let release = await this.getTorrentRelease(choice);
 
-        // download found, add it to queue
+        // download found, add it to the queue
         if(release){
             console.log(release, JSON.stringify(release));
             let request = new Request(url, {
@@ -834,7 +833,7 @@ class Album {
                 releasesDiv.appendChild(p);            
 
                 while(!queued[this.id]){
-                    await sleep(500);
+                    await sleep(config.sleep_between_retries);
                     await getQueue(1);
                 }
             
@@ -901,7 +900,7 @@ class Album {
             releasesDiv.appendChild(p);            
 
             while(!queued[this.id]){
-                await sleep(500);
+                await sleep(config.sleep_between_retries);
                 await getQueue(1);
             }
             

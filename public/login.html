@@ -17,7 +17,7 @@
 <body>
   <div class="glass" id="main">
     <h2>Audette</h2>
-    <div id="dialog">Please log in to your account</div>
+    <div id="dialog">Please log into your account</div>
     <div id="error"></div>
     <form action="/login" method="POST" id="form">
       <div class="field">
@@ -28,7 +28,7 @@
         <label>Password</label>
         <input type="password" name="password" class="input-field" id="password" />
       </div>
-      <input type="submit" value="Log in" class="glass glass-button" id="submit" />
+      <input type="submit" value="Log in" class="glass glass-button" id="submit-btn" />
     </form>
 
   </div>
@@ -42,6 +42,7 @@
     const password = document.querySelector("#password");
     const form = document.querySelector("#form");
     const error = document.querySelector("#error");
+    const submit = document.querySelector("#submit-btn");
 
     username.addEventListener("keypress", (e) => {
       if (e.key == "Enter") {
@@ -50,12 +51,15 @@
       }
     })
 
-    let cookie = document.cookie;
-    let text = decodeURI(cookie).split("=")[1].replace("%2F", "/")
-    if (text != "undefined") {
-      error.innerHTML = text;
-    }
 
+
+    let cookie = document.cookie;
+    if (cookie) {
+      let text = decodeURI(cookie).split("=")[1].replace("%2F", "/");
+      if (text != "undefined") {
+        error.innerHTML = text;
+      }
+    }
   </script>
 </body>
 
