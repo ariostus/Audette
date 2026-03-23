@@ -11,8 +11,9 @@
   --light: #d4e9f0;
   --midtone: #47557c;
   --darkmid: #20384b;
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-border-active: rgba(0, 0, 0, 0.1);
+  /* --glass-border: rgba(255, 255, 255, 0.1); */
+  --glass-border: #968fd346;
+  --glass-border-active: #041d2133;
   --color1-t: #968fd366;
   --color2-t: #041d2166;
   --light-t: #d4e9f066;
@@ -52,7 +53,7 @@ body {
   font-weight: 300;
   margin: 0;
   /* background: linear-gradient(60deg, var(--color1), var(--color2)); */
-  background-color: hsla(289, 56%, 22%, 1);
+  /* background-color: hsla(289, 56%, 22%, 1); */
   /* background-image: radial-gradient(circle at 96% 10%, hsla(279, 49%, 26%, 1) 12%, transparent 53%), */
   /* radial-gradient(circle at 36% 25%, hsla(322, 58%, 63%, 1) 12%, transparent 53%), */
   /* radial-gradient(circle at 88% 83%, hsla(329, 86%, 86%, 1) 12%, transparent 53%), */
@@ -92,6 +93,8 @@ body {
     var(--color2);
 
   /* filter: hue-rotate(20deg); */
+  /* background-blend-mode: difference; */
+  filter: brightness(110%) contrast(120%);
 
 }
 
@@ -130,7 +133,9 @@ button {
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background: linear-gradient(var(--midtone), var(--color2));
+  background: linear-gradient(var(--color2), var(--darkmid)),
+    var(--color2);
+  /* background-blend-mode: soft-light; */
   position: absolute;
   z-index: 0;
 
@@ -139,7 +144,8 @@ button {
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
 
-  /* filter: hue-rotate(20deg); */
+  filter: hue-rotate(10deg);
+  filter: brightness(110%) contrast(120%);
 }
 
 
@@ -327,8 +333,14 @@ button {
   /* border: 2px dotted white; */
 }
 
+@keyframes rotate {
+  to {
+    transform: rotate(180deg);
+  }
+}
+
 #header-right2:hover {
-  animation: wobble;
+  animation: rotate;
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
@@ -485,7 +497,7 @@ button {
 
 .artistLibraryPreview {
   /* background-color: rgba(255, 255, 255, 0.2); */
-  text-align: left;
+  text-align: center;
   /* font-family: 'Courier New', Courier, monospace; */
   height: fit-content;
   /* border: 1px dotted white; */
@@ -531,6 +543,7 @@ button {
 .artistLibraryPoster {
   width: 60%;
   border-radius: 50%;
+  margin: auto;
 }
 
 

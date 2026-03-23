@@ -36,7 +36,7 @@
     /* linear-gradient(135deg, var(--glass-border) 0, transparent 10%), */
     /* linear-gradient(45deg, var(--glass-border) 0, transparent 10%), */
     /* linear-gradient(-135deg, var(--glass-border) 0, transparent 10%); */
-    radial-gradient(at top left, var(--glass-border), transparent 50%),
+    radial-gradient(at top left, var(--glass-border), var(--glass-border-active) 50%),
     radial-gradient(at bottom right, var(--glass-border), transparent 50%);
   mask:
     linear-gradient(#000, #000) content-box,

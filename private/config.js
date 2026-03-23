@@ -26,9 +26,9 @@ config.bug_report_email = "ludovico@sardiniangale.org";
 
 // displayed inside settings tab - add as many elements as you like
 config.application_info = [
-  "Version: 0.9.3",
+  "Version: 0.9.4",
   "License: GPL-3.0",
-  "Last update: March 22, 2026",
+  "Last update: March 23, 2026",
   "Coming soon: album search",
   "<i>Never gonna give you up!</i>"
 ];
